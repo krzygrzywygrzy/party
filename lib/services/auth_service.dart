@@ -19,7 +19,6 @@ class AuthService {
         return Left(
             SignInFailure("The account already exists for that email."));
       } else {
-        print(e);
         return Left(UnknownFailure());
       }
     } catch (e) {
@@ -29,6 +28,21 @@ class AuthService {
 
   static Future<Either<Failure, UserCredential>> signUp(
       String email, String password) async {
-    throw UnimplementedError();
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      return Right(userCredential);
+    } on FirebaseException catch (e) {
+      if (e.code == 'user-not-found') {
+        return Left(SignUpFailure('No user found for that email.'));
+      } else if (e.code == 'wrong-password') {
+        return Left(SignUpFailure('Wrong password provided for that user.'));
+      } else {
+        return Left(UnknownFailure());
+      }
+    } catch (e) {
+      return Left(UnknownFailure());
+    }
   }
 }

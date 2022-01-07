@@ -21,7 +21,6 @@ class _AccountState extends ConsumerState<Account> {
 
   @override
   void initState() {
-    // TODO: implement initState
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         setState(() {
@@ -36,43 +35,59 @@ class _AccountState extends ConsumerState<Account> {
     super.initState();
   }
 
+  handleSignOut() => FirebaseAuth.instance.signOut();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: _loggedIn
-            ? Column()
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    "You are not currently signed up!",
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Button(
-                        label: "Sign up",
-                        onClick: () =>
-                            Navigator.pushNamed(context, SignUp.path),
-                      ),
-                      const SizedBox(
-                        width: 8.0,
-                      ),
-                      Button(
-                        label: "Sign in",
-                        onClick: () =>
-                            Navigator.pushNamed(context, SignIn.path),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SafeArea(
+          child: _loggedIn
+              ? Column(
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: handleSignOut,
+                          child: const Icon(Icons.logout),
+                        )
+                      ],
+                    )
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      "You are not currently signed up!",
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Button(
+                          label: "Sign up",
+                          onClick: () =>
+                              Navigator.pushNamed(context, SignUp.path),
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        Button(
+                          label: "Sign in",
+                          onClick: () =>
+                              Navigator.pushNamed(context, SignIn.path),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+        ),
       ),
     );
   }

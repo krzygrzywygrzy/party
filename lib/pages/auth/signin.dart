@@ -20,7 +20,7 @@ class _SignInState extends State<SignIn> {
 
   bool _loading = false;
   String? message;
-  Future<void> performSignUp() async {
+  Future<void> performSignIn() async {
     setState(() {
       _loading = true;
     });
@@ -90,7 +90,7 @@ class _SignInState extends State<SignIn> {
                 children: [
                   Button(
                     label: _loading ? "Loading..." : "Sign in",
-                    onClick: performSignUp,
+                    onClick: performSignIn,
                   )
                 ],
               ),

@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/pages/account/account.dart';
+import 'package:party/pages/home/home_events.dart';
 import 'package:party/providers/home_provider.dart';
 import 'package:party/widgets/input/avatar.dart';
 
@@ -16,16 +18,29 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
+  bool _loggedIn = false;
+
   @override
   void initState() {
     super.initState();
-    //ref.read(homeProvider.notifier).load();
+
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        setState(() {
+          _loggedIn = false;
+        });
+      } else {
+        setState(() {
+          _loggedIn = true;
+        });
+      }
+    });
+
+    ref.read(homeProvider.notifier).load();
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeData = ref.watch(homeProvider);
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -34,13 +49,20 @@ class _HomeState extends ConsumerState<Home> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Welcome!",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Welcome!",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),
+                      ),
+                      Text("Search for events in your area"),
+                    ],
                   ),
                   Avatar(
                     onClick: () {
@@ -48,7 +70,11 @@ class _HomeState extends ConsumerState<Home> {
                     },
                   ),
                 ],
-              )
+              ),
+              const SizedBox(
+                height: 16.0,
+              ),
+              const HomeEvents(),
             ],
           ),
         ),
