@@ -1,30 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:party/core/failure.dart';
+import 'package:party/pages/home/home.dart';
+import 'package:party/services/auth_service.dart';
 import 'package:party/widgets/input/button.dart';
 import 'package:party/widgets/input/custom_text_field.dart';
 
-class SignUp extends ConsumerStatefulWidget {
-  const SignUp({
-    Key? key,
-  }) : super(key: key);
+class SignIn extends StatefulWidget {
+  const SignIn({Key? key}) : super(key: key);
 
-  static const String path = "/signup";
+  static const String path = "/signin";
 
   @override
-  ConsumerState createState() => _SignUpState();
+  _SignInState createState() => _SignInState();
 }
 
-class _SignUpState extends ConsumerState<SignUp> {
+class _SignInState extends State<SignIn> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   bool _loading = false;
+  String? message;
   Future<void> performSignUp() async {
     setState(() {
       _loading = true;
     });
 
-    //TODO: perform login with firebase
+    var response = await AuthService.signIn(
+      _emailController.text,
+      _passwordController.text,
+    );
+
+    response.fold((l) {
+      if (l is SignInFailure) {
+        setState(() {
+          message = l.message;
+        });
+      } else {
+        setState(() {
+          message = "Unknown error occurred";
+        });
+      }
+    },
+        (r) => Navigator.of(context).pushNamedAndRemoveUntil(
+            Home.path, (Route<dynamic> route) => false));
 
     setState(() {
       _loading = false;
@@ -43,7 +61,7 @@ class _SignUpState extends ConsumerState<SignUp> {
               Row(
                 children: const [
                   Text(
-                    "Sign Up to Party",
+                    "Create account",
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontSize: 16.0,
@@ -71,10 +89,12 @@ class _SignUpState extends ConsumerState<SignUp> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Button(
-                    label: _loading ? "Loading..." : "Sign up",
+                    label: _loading ? "Loading..." : "Sign in",
+                    onClick: performSignUp,
                   )
                 ],
               ),
+              Text(message ?? ""),
             ],
           ),
         ),

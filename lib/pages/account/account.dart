@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:party/pages/auth/signin.dart';
 import 'package:party/pages/auth/singup.dart';
 import 'package:party/widgets/input/button.dart';
 
@@ -65,7 +66,8 @@ class _AccountState extends ConsumerState<Account> {
                       ),
                       Button(
                         label: "Sign in",
-                        onClick: () {},
+                        onClick: () =>
+                            Navigator.pushNamed(context, SignIn.path),
                       ),
                     ],
                   )
