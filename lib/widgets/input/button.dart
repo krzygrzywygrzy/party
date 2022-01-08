@@ -14,13 +14,16 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      elevation: 1,
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
           onTap: onClick,
-          child: Text(label),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );

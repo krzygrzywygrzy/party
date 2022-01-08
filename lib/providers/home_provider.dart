@@ -12,7 +12,6 @@ class HomeProvider extends StateNotifier<Home> {
   HomeProvider() : super(Home(loading: false));
 
   load() {
-    print("damn");
     state = Home(loading: true);
   }
 }

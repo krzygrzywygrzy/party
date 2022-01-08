@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Party',
-      theme: ThemeData(),
+      theme: ThemeData(
+        fontFamily: "Nunito",
+      ),
       initialRoute: Home.path,
       routes: {
         Welcome.path: (context) => const Welcome(),
