@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:party/models/event.dart';
+import 'package:party/pages/account/account.dart';
+import 'package:party/services/event_service.dart';
 import 'package:party/widgets/input/button.dart';
 import 'package:party/widgets/input/custom_text_field.dart';
 import 'package:party/widgets/input/elevated_text_field.dart';
@@ -20,6 +24,39 @@ class _AddEventState extends ConsumerState<AddEvent> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   bool _invitationNeeded = false;
+
+  @override
+  void initState() {
+    //if user is not logged in redirect to account page
+    if (FirebaseAuth.instance.currentUser == null) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Account.path, (Route<dynamic> route) => false);
+    }
+    super.initState();
+  }
+
+  bool _loading = false;
+  String? message;
+  Future<void> addEvent() async {
+    setState(() {
+      _loading = true;
+    });
+
+    FirebaseAuth.instance.currentUser!.uid;
+
+    var res = await EventService.addEvent(Event(
+      title: _titleController.text,
+      invitationNeeded: _invitationNeeded,
+      description: _descriptionController.text,
+      organizerUID: FirebaseAuth.instance.currentUser!.uid,
+    ));
+
+    //TODO: fold the response
+
+    setState(() {
+      _loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,12 +128,13 @@ class _AddEventState extends ConsumerState<AddEvent> {
                     )
                   ],
                 ),
-                const Positioned(
+                Positioned(
                   bottom: 0,
                   left: 0,
                   right: 0,
                   child: Button(
-                    label: "Add",
+                    onClick: addEvent,
+                    label: _loading ? "Loading..." : "Add",
                   ),
                 ),
               ],
