@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/pages/account/account.dart';
+import 'package:party/pages/add_event/add_event.dart';
 import 'package:party/pages/auth/signin.dart';
 import 'package:party/pages/auth/singup.dart';
 import 'package:party/pages/home/home.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         Account.path: (context) => const Account(),
         SignUp.path: (context) => const SignUp(),
         SignIn.path: (context) => const SignIn(),
+        AddEvent.path: (context) => const AddEvent(),
       },
     );
   }

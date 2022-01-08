@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/pages/account/account.dart';
+import 'package:party/pages/add_event/add_event.dart';
 import 'package:party/pages/home/home_events.dart';
 import 'package:party/providers/home_provider.dart';
 import 'package:party/widgets/input/avatar.dart';
@@ -42,6 +43,11 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.amber,
+        onPressed: () => Navigator.pushNamed(context, AddEvent.path),
+        child: const Icon(Icons.add),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -70,6 +76,9 @@ class _HomeState extends ConsumerState<Home> {
                     },
                   ),
                 ],
+              ),
+              const SizedBox(
+                height: 16.0,
               ),
               const SizedBox(
                 height: 16.0,
