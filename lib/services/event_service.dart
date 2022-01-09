@@ -4,7 +4,7 @@ import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 
 class EventService {
-  static CollectionReference _events =
+  static final CollectionReference _events =
       FirebaseFirestore.instance.collection("events");
 
   static Future<Either<Failure, Event>> addEvent(Event event) async {
@@ -39,7 +39,6 @@ class EventService {
     } on FirebaseException catch (e) {
       return Left(FirestoreFailure(e.message));
     } catch (e) {
-      print(e);
       return Left(UnknownFailure());
     }
   }

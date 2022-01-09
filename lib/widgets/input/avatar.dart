@@ -15,7 +15,7 @@ class Avatar extends StatelessWidget {
     return GestureDetector(
       onTap: onClick,
       child: CircleAvatar(
-        backgroundImage: NetworkImage(
+        backgroundImage: const NetworkImage(
             "https://pbs.twimg.com/profile_images/1143988936177528832/gyyq5Ub6_400x400.jpg"),
         child: child,
       ),

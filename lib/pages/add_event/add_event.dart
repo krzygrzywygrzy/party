@@ -67,7 +67,7 @@ class _AddEventState extends ConsumerState<AddEvent> {
         });
       }
     }, (r) {
-      print(r);
+      //TODO: go to event page or sth
     });
   }
 

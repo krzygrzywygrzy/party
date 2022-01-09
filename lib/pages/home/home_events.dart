@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:party/core/failure.dart';
+import 'package:party/models/event.dart';
 import 'package:party/providers/home_provider.dart';
 
 class HomeEvents extends ConsumerWidget {
@@ -18,13 +20,26 @@ class HomeEvents extends ConsumerWidget {
         ),
       );
     } else if (homeData.failure != null) {
-      return const Expanded(
+      String? message;
+
+      //check why cannot do:
+      //homeData.failure.message
+      var failure = homeData.failure;
+      if (failure is FirestoreFailure) {
+        message = failure.message;
+      }
+
+      return Expanded(
         child: Center(
-          child: Text("Error"),
+          child: Text(message ?? "Unknown error occurred"),
         ),
       );
     } else {
-      return Placeholder();
+      return buildEvents(homeData.events!);
     }
+  }
+
+  Widget buildEvents(List<Event> events) {
+    return Container();
   }
 }
