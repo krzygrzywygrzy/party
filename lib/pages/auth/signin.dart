@@ -30,6 +30,10 @@ class _SignInState extends State<SignIn> {
       _passwordController.text,
     );
 
+    setState(() {
+      _loading = false;
+    });
+
     response.fold((l) {
       if (l is SignInFailure) {
         setState(() {
@@ -43,10 +47,6 @@ class _SignInState extends State<SignIn> {
     },
         (r) => Navigator.of(context).pushNamedAndRemoveUntil(
             Home.path, (Route<dynamic> route) => false));
-
-    setState(() {
-      _loading = false;
-    });
   }
 
   @override

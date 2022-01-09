@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/pages/account/account.dart';
 import 'package:party/services/event_service.dart';
@@ -51,10 +52,22 @@ class _AddEventState extends ConsumerState<AddEvent> {
       organizerUID: FirebaseAuth.instance.currentUser!.uid,
     ));
 
-    //TODO: fold the response
-
     setState(() {
       _loading = false;
+    });
+
+    res.fold((l) {
+      if (l is FirestoreFailure) {
+        setState(() {
+          message = l.message;
+        });
+      } else {
+        setState(() {
+          message = "Unknown error occurred";
+        });
+      }
+    }, (r) {
+      print(r);
     });
   }
 

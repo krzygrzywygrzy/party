@@ -33,6 +33,10 @@ class _SignUpState extends ConsumerState<SignUp> {
       _passwordController.text,
     );
 
+    setState(() {
+      _loading = false;
+    });
+
     res.fold((l) {
       if (l is SignUpFailure) {
         setState(() {
@@ -46,10 +50,6 @@ class _SignUpState extends ConsumerState<SignUp> {
     },
         (r) => Navigator.of(context).pushNamedAndRemoveUntil(
             Home.path, (Route<dynamic> route) => false));
-
-    setState(() {
-      _loading = false;
-    });
   }
 
   @override

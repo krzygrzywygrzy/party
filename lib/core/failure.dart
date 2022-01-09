@@ -11,3 +11,8 @@ class SignUpFailure implements Failure {
   SignUpFailure(this.message);
   final String? message;
 }
+
+class FirestoreFailure implements Failure {
+  FirestoreFailure(this.message);
+  final String? message;
+}
