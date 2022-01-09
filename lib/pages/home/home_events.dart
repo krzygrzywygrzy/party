@@ -17,6 +17,12 @@ class HomeEvents extends ConsumerWidget {
           child: Text("Loading..."),
         ),
       );
+    } else if (homeData.failure != null) {
+      return const Expanded(
+        child: Center(
+          child: Text("Error"),
+        ),
+      );
     } else {
       return Placeholder();
     }

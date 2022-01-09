@@ -4,14 +4,13 @@ import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 
 class EventService {
+  static CollectionReference _events =
+      FirebaseFirestore.instance.collection("events");
+
   static Future<Either<Failure, Event>> addEvent(Event event) async {
     try {
       var json = event.toJson();
-
-      CollectionReference events =
-          FirebaseFirestore.instance.collection("events");
-
-      var res = await events.add(json);
+      var res = await _events.add(json);
 
       return Right(
         Event.fromJson({
@@ -22,6 +21,25 @@ class EventService {
     } on FirebaseException catch (e) {
       return Left(FirestoreFailure(e.message));
     } catch (e) {
+      return Left(UnknownFailure());
+    }
+  }
+
+  static Future<Either<Failure, List<Event>>> getAllEvents() async {
+    try {
+      List<Event> events = [];
+
+      var querySnapshot = await _events.get();
+      for (var doc in querySnapshot.docs) {
+        events.add(Event.fromJson(
+            {"id": doc.id, ...doc.data() as Map<String, dynamic>}));
+      }
+
+      return Right(events);
+    } on FirebaseException catch (e) {
+      return Left(FirestoreFailure(e.message));
+    } catch (e) {
+      print(e);
       return Left(UnknownFailure());
     }
   }

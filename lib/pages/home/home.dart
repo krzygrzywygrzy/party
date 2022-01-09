@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/pages/account/account.dart';
 import 'package:party/pages/add_event/add_event.dart';
 import 'package:party/pages/home/home_events.dart';
+import 'package:party/providers/home_provider.dart';
 import 'package:party/widgets/input/avatar.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -36,7 +37,7 @@ class _HomeState extends ConsumerState<Home> {
       }
     });
 
-    //ref.read(homeProvider.notifier).load();
+    ref.read(homeProvider.notifier).load();
   }
 
   @override
