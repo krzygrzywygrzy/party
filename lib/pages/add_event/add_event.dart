@@ -29,10 +29,13 @@ class _AddEventState extends ConsumerState<AddEvent> {
   @override
   void initState() {
     //if user is not logged in redirect to account page
-    if (FirebaseAuth.instance.currentUser == null) {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Account.path, (Route<dynamic> route) => false);
-    }
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (FirebaseAuth.instance.currentUser == null) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Account.path, (Route<dynamic> route) => false);
+      }
+    });
+
     super.initState();
   }
 

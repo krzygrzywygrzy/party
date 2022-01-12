@@ -43,48 +43,53 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xfff6f6f6),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.amber,
-        onPressed: () => Navigator.pushNamed(context, AddEvent.path),
+        onPressed: () => _loggedIn
+            ? Navigator.pushNamed(context, AddEvent.path)
+            : Navigator.pushNamed(context, Account.path),
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Welcome!",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          "Welcome!",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                          ),
                         ),
-                      ),
-                      Text("Search for events in your area"),
-                    ],
-                  ),
-                  Avatar(
-                    onClick: () {
-                      Navigator.pushNamed(context, Account.path);
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 16.0,
-              ),
-              const SizedBox(
-                height: 16.0,
-              ),
-              const HomeEvents(),
-            ],
+                        Text("Search for events in your area"),
+                      ],
+                    ),
+                    Avatar(
+                      onClick: () {
+                        Navigator.pushNamed(context, Account.path);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 16.0,
+                ),
+                const SizedBox(
+                  height: 16.0,
+                ),
+                const HomeEvents(),
+              ],
+            ),
           ),
         ),
       ),

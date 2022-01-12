@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class Button extends StatelessWidget {
   const Button({
     Key? key,
-    required this.label,
-    this.onClick,
-  }) : super(key: key);
+    required String label,
+    void Function()? onClick,
+  })  : _label = label,
+        _onClick = onClick,
+        super(key: key);
 
-  final String label;
-  final void Function()? onClick;
+  final String _label;
+  final void Function()? _onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +21,9 @@ class Button extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
-          onTap: onClick,
+          onTap: _onClick,
           child: Text(
-            label,
+            _label,
             textAlign: TextAlign.center,
           ),
         ),

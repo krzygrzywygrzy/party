@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/providers/home_provider.dart';
+import 'package:party/widgets/cards/event_card.dart';
 
 class HomeEvents extends ConsumerWidget {
   const HomeEvents({
@@ -40,6 +41,20 @@ class HomeEvents extends ConsumerWidget {
   }
 
   Widget buildEvents(List<Event> events) {
-    return Container();
+    if (events.isEmpty) {
+      return const Expanded(
+        child: Center(
+          child: Text("There are no events in your near area!"),
+        ),
+      );
+    }
+    List<Widget> children = [];
+    for (Event event in events) {
+      children.add(EventCard(event: event));
+    }
+
+    return Column(
+      children: children,
+    );
   }
 }
