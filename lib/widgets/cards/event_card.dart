@@ -75,7 +75,7 @@ class EventCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image.network(
-                      "https://www.travelin.pl/galeria/sydney-opera-house.jpg",
+                      "https://cms.finnair.com/resource/blob/512102/9c27b858c9241ccc69ab7a418eb92d65/new-york-shopping-data.jpg?impolicy=crop&width=1697&height=955&x=0&y=88&imwidth=768",
                       fit: BoxFit.cover,
                     ),
                   ),

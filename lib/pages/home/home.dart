@@ -23,8 +23,6 @@ class _HomeState extends ConsumerState<Home> {
 
   @override
   void initState() {
-    super.initState();
-
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         setState(() {
@@ -38,6 +36,7 @@ class _HomeState extends ConsumerState<Home> {
     });
 
     ref.read(homeProvider.notifier).load();
+    super.initState();
   }
 
   @override

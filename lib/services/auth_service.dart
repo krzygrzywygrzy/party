@@ -1,16 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:party/core/failure.dart';
+import 'package:party/models/user.dart' as PartyUser;
 
 class AuthService {
   static Future<Either<Failure, UserCredential>> signIn(
-      String email, String password) async {
+      String email, String password, String name, String surname) async {
     try {
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      //save new user's data to Firestore
+      final CollectionReference users =
+          FirebaseFirestore.instance.collection("users");
+
+      await users.doc(userCredential.user!.uid).set({
+        "name": name,
+        "surname": surname,
+        "avatar": null,
+      });
+
       return Right(userCredential);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -21,6 +34,8 @@ class AuthService {
       } else {
         return Left(UnknownFailure());
       }
+    } on FirebaseException {
+      return Left(FirestoreFailure("Could not save user data to database!"));
     } catch (e) {
       return Left(UnknownFailure());
     }
@@ -44,5 +59,9 @@ class AuthService {
     } catch (e) {
       return Left(UnknownFailure());
     }
+  }
+
+  static Future<Either<Failure, PartyUser.User>> getUser(String uid) async {
+    throw UnimplementedError();
   }
 }

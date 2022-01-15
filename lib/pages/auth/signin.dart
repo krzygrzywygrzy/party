@@ -17,6 +17,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _surnameController = TextEditingController();
 
   bool _loading = false;
   String? message;
@@ -28,6 +30,8 @@ class _SignInState extends State<SignIn> {
     var response = await AuthService.signIn(
       _emailController.text,
       _passwordController.text,
+      _nameController.text,
+      _surnameController.text,
     );
 
     setState(() {
@@ -41,7 +45,7 @@ class _SignInState extends State<SignIn> {
         });
       } else {
         setState(() {
-          message = "Unknown error occurred";
+          message = "Unknown error occurred, try again later";
         });
       }
     },
@@ -56,6 +60,7 @@ class _SignInState extends State<SignIn> {
         child: Padding(
           padding: const EdgeInsets.all(32.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
@@ -83,7 +88,22 @@ class _SignInState extends State<SignIn> {
                 obscure: true,
               ),
               const SizedBox(
-                height: 12.0,
+                height: 32.0,
+              ),
+              const Text(
+                "Now provide us with some\nbasic information...",
+                textAlign: TextAlign.left,
+              ),
+              CustomTextField(
+                controller: _nameController,
+                hint: "name...",
+              ),
+              CustomTextField(
+                controller: _surnameController,
+                hint: "surname...",
+              ),
+              const SizedBox(
+                height: 16.0,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
