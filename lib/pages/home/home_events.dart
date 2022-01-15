@@ -15,10 +15,8 @@ class HomeEvents extends ConsumerWidget {
     final homeData = ref.watch(homeProvider);
 
     if (homeData.loading) {
-      return const Expanded(
-        child: Center(
-          child: Text("Loading..."),
-        ),
+      return const Center(
+        child: Text("Loading..."),
       );
     } else if (homeData.failure != null) {
       String? message;
@@ -42,15 +40,16 @@ class HomeEvents extends ConsumerWidget {
 
   Widget buildEvents(List<Event> events) {
     if (events.isEmpty) {
-      return const Expanded(
-        child: Center(
-          child: Text("There are no events in your near area!"),
-        ),
+      return const Center(
+        child: Text("There are no events in your near area!"),
       );
     }
     List<Widget> children = [];
     for (Event event in events) {
       children.add(EventCard(event: event));
+      children.add(const SizedBox(
+        height: 16.0,
+      ));
     }
 
     return Column(

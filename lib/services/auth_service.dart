@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:party/core/failure.dart';
-import 'package:party/models/user.dart' as PartyUser;
+import 'package:party/models/user.dart' as party;
 
 class AuthService {
   static Future<Either<Failure, UserCredential>> signIn(
-      String email, String password, String name, String surname) async {
+      String email, String password, party.User user) async {
     try {
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -18,11 +18,7 @@ class AuthService {
       final CollectionReference users =
           FirebaseFirestore.instance.collection("users");
 
-      await users.doc(userCredential.user!.uid).set({
-        "name": name,
-        "surname": surname,
-        "avatar": null,
-      });
+      await users.doc(userCredential.user!.uid).set(user.toJson());
 
       return Right(userCredential);
     } on FirebaseAuthException catch (e) {
@@ -61,7 +57,17 @@ class AuthService {
     }
   }
 
-  static Future<Either<Failure, PartyUser.User>> getUser(String uid) async {
-    throw UnimplementedError();
+  static Future<Either<Failure, party.User>> getUser(String uid) async {
+    try {
+      final CollectionReference users =
+          FirebaseFirestore.instance.collection("users");
+      var res = await users.doc(uid).get();
+
+      return Right(party.User.fromJson(res.data() as Map<String, dynamic>));
+    } on FirebaseException {
+      return Left(FirestoreFailure("Could not load user's data!"));
+    } catch (e) {
+      return Left(UnknownFailure());
+    }
   }
 }

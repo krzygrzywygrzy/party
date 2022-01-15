@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:party/core/failure.dart';
+import 'package:party/models/user.dart';
 import 'package:party/pages/home/home.dart';
 import 'package:party/services/auth_service.dart';
 import 'package:party/widgets/input/button.dart';
@@ -30,8 +31,10 @@ class _SignInState extends State<SignIn> {
     var response = await AuthService.signIn(
       _emailController.text,
       _passwordController.text,
-      _nameController.text,
-      _surnameController.text,
+      User(
+        name: _nameController.text,
+        surname: _surnameController.text,
+      ),
     );
 
     setState(() {

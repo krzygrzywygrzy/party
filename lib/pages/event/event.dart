@@ -1,9 +1,15 @@
+import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
+import 'package:party/models/user.dart' as party;
 import 'package:party/pages/account/account.dart';
+import 'package:party/services/auth_service.dart';
 import 'package:party/widgets/input/button.dart';
+import 'package:party/widgets/layout/user_card.dart';
+import 'package:party/widgets/layout/user_skeleteon.dart';
 
 class EventPage extends ConsumerStatefulWidget {
   const EventPage({
@@ -64,7 +70,10 @@ class _EventPageState extends ConsumerState<EventPage> {
                     child: Stack(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(20.0),
+                            bottomRight: Radius.circular(20.0),
+                          ),
                           child: Image.network(
                             "https://cms.finnair.com/resource/blob/512102/9c27b858c9241ccc69ab7a418eb92d65/new-york-shopping-data.jpg?impolicy=crop&width=1697&height=955&x=0&y=88&imwidth=768",
                             fit: BoxFit.cover,
@@ -97,6 +106,43 @@ class _EventPageState extends ConsumerState<EventPage> {
                       widget._event.description ?? "",
                       textAlign: TextAlign.left,
                     ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    FutureBuilder(
+                        future: AuthService.getUser(widget._event.organizerUID),
+                        builder: (
+                          context,
+                          AsyncSnapshot<Either<Failure, party.User>> snapshot,
+                        ) {
+                          Widget layout = const UserSkeleton();
+                          if (snapshot.hasData) {
+                            snapshot.data!.fold(
+                                (l) => {},
+                                (r) => {
+                                      layout = Column(
+                                        children: [
+                                          const Text(
+                                            "organized by:",
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          ),
+                                          const SizedBox(
+                                            height: 4.0,
+                                          ),
+                                          UserCard(
+                                            user: r,
+                                          ),
+                                        ],
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                      ),
+                                    });
+                          } else if (snapshot.hasError) {
+                            //TODO: display error
+                          }
+                          return layout;
+                        }),
                   ],
                 ),
               ),

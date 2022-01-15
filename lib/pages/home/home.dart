@@ -70,7 +70,7 @@ class _HomeState extends ConsumerState<Home> {
                             fontSize: 25,
                           ),
                         ),
-                        Text("Search for events in your area"),
+                        Text("browse events in your area"),
                       ],
                     ),
                     Avatar(
