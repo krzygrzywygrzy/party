@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Event {
   Event({
     this.id,
@@ -5,6 +7,8 @@ class Event {
     required this.invitationNeeded,
     this.description,
     required this.organizerUID,
+    required this.startDate,
+    required this.startTime,
   });
 
   final String? id;
@@ -12,6 +16,8 @@ class Event {
   final bool invitationNeeded;
   final String? description;
   final String organizerUID;
+  final DateTime startDate;
+  final TimeOfDay startTime;
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
@@ -20,6 +26,11 @@ class Event {
       description: json["description"],
       organizerUID: json["organizerUID"],
       id: json["id"],
+      startTime: TimeOfDay(
+        minute: json["minute"],
+        hour: json["hour"],
+      ),
+      startDate: DateTime(json["startDate"]),
     );
   }
 
@@ -29,6 +40,9 @@ class Event {
       "invitationNeeded": invitationNeeded,
       "description": description,
       "organizerUID": organizerUID,
+      "startDate": startDate.toIso8601String(),
+      "minute": startTime.minute,
+      "hour": startTime.hour,
     };
   }
 }

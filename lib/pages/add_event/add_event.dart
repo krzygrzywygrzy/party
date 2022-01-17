@@ -215,6 +215,9 @@ class _AddEventState extends ConsumerState<AddEvent> {
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 60.0,
+                    ),
                   ],
                 ),
                 Positioned(
