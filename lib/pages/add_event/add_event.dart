@@ -56,6 +56,8 @@ class _AddEventState extends ConsumerState<AddEvent> {
       invitationNeeded: _invitationNeeded,
       description: _descriptionController.text,
       organizerUID: FirebaseAuth.instance.currentUser!.uid,
+      startDate: _startDate,
+      startTime: _startTime,
     ));
 
     setState(() {
@@ -106,15 +108,18 @@ class _AddEventState extends ConsumerState<AddEvent> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height - 32.0,
+              maxHeight: MediaQuery.of(context).size.height,
             ),
             child: Stack(
               children: [
-                Column(
+                ListView(
                   children: [
+                    const SizedBox(
+                      height: 16.0,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: const [
@@ -216,12 +221,12 @@ class _AddEventState extends ConsumerState<AddEvent> {
                       ],
                     ),
                     const SizedBox(
-                      height: 60.0,
+                      height: 72.0,
                     ),
                   ],
                 ),
                 Positioned(
-                  bottom: 0,
+                  bottom: 16.0,
                   left: 0,
                   right: 0,
                   child: Button(
