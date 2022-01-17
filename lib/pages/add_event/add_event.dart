@@ -7,6 +7,7 @@ import 'package:party/pages/account/account.dart';
 import 'package:party/services/event_service.dart';
 import 'package:party/widgets/input/button.dart';
 import 'package:party/widgets/input/custom_text_field.dart';
+import 'package:party/widgets/input/elevated_card.dart';
 import 'package:party/widgets/input/elevated_text_field.dart';
 import 'package:party/widgets/input/selective_button.dart';
 
@@ -25,6 +26,8 @@ class _AddEventState extends ConsumerState<AddEvent> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   bool _invitationNeeded = false;
+  DateTime _startDate = DateTime.now();
+  TimeOfDay _startTime = TimeOfDay.now();
 
   @override
   void initState() {
@@ -72,6 +75,30 @@ class _AddEventState extends ConsumerState<AddEvent> {
     }, (r) {
       //TODO: go to event page or sth
     });
+  }
+
+  void pickEventDate() async {
+    var newDate = await showDatePicker(
+        context: context,
+        initialDate: _startDate,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(const Duration(days: 365)));
+    if (newDate != null) {
+      setState(() {
+        _startDate = newDate;
+      });
+    }
+  }
+
+  void pickEventTime() async {
+    var newTime =
+        await showTimePicker(context: context, initialTime: _startTime);
+
+    if (newTime != null) {
+      setState(() {
+        _startTime = newTime;
+      });
+    }
   }
 
   @override
@@ -141,7 +168,53 @@ class _AddEventState extends ConsumerState<AddEvent> {
                     ElevatedTextField(
                       controller: _descriptionController,
                       hint: "description...",
-                    )
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Row(
+                      children: [
+                        ElevatedCard(
+                          height: 80.0,
+                          onClick: pickEventDate,
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${_startDate.day}.${_startDate.month}",
+                                    style: const TextStyle(
+                                      fontSize: 26.0,
+                                    ),
+                                  ),
+                                  Text("${_startDate.year}"),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16.0,
+                        ),
+                        ElevatedCard(
+                          onClick: pickEventTime,
+                          height: 80.0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                "${_startTime.hour}:${_startTime.minute}",
+                                style: const TextStyle(
+                                  fontSize: 30.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 Positioned(
