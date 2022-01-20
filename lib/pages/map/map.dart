@@ -11,9 +11,12 @@ import 'package:party/widgets/input/elevated_card.dart';
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({
     Key? key,
-  }) : super(key: key);
+    void Function(PlacesSearchResult place)? setPlace,
+  })  : _setPlace = setPlace,
+        super(key: key);
 
   static const String path = "/map";
+  final void Function(PlacesSearchResult place)? _setPlace;
 
   @override
   ConsumerState createState() => _MapPageState();
@@ -195,7 +198,10 @@ class _MapPageState extends ConsumerState<MapPage> {
                       Button(
                         label: "Select",
                         onClick: () {
-                          //TODO: select place
+                          if (widget._setPlace != null &&
+                              _selectedPlace != null) {
+                            widget._setPlace!(_selectedPlace!);
+                          }
                         },
                       ),
                     ],
@@ -225,7 +231,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                               ),
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
-                                hintText: "address...",
+                                hintText: "search...",
                                 hintStyle: TextStyle(
                                   fontSize: 14.0,
                                 ),

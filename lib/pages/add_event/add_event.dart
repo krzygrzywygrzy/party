@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/pages/account/account.dart';
@@ -29,6 +30,7 @@ class _AddEventState extends ConsumerState<AddEvent> {
   bool _invitationNeeded = false;
   DateTime _startDate = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
+  PlacesSearchResult? _selectedPlace;
 
   @override
   void initState() {
@@ -240,17 +242,25 @@ class _AddEventState extends ConsumerState<AddEvent> {
                       children: [
                         Expanded(
                           child: ElevatedCard(
-                            onClick: () =>
-                                Navigator.pushNamed(context, MapPage.path),
+                            onClick: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MapPage(
+                                  setPlace: (place) {},
+                                ),
+                              ),
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
-                                children: const [
-                                  Icon(Icons.place_sharp),
-                                  SizedBox(
+                                children: [
+                                  const Icon(Icons.place_sharp),
+                                  const SizedBox(
                                     width: 12.0,
                                   ),
-                                  Text("Select address"),
+                                  Text(_selectedPlace == null
+                                      ? "Select address"
+                                      : "${_selectedPlace!.name}, ${_selectedPlace!.formattedAddress ?? ""}"),
                                 ],
                               ),
                             ),
