@@ -246,7 +246,11 @@ class _AddEventState extends ConsumerState<AddEvent> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MapPage(
-                                  setPlace: (place) {},
+                                  setPlace: (place) {
+                                    setState(() {
+                                      _selectedPlace = place;
+                                    });
+                                  },
                                 ),
                               ),
                             ),

@@ -12,11 +12,14 @@ class MapPage extends ConsumerStatefulWidget {
   const MapPage({
     Key? key,
     void Function(PlacesSearchResult place)? setPlace,
+    PlacesSearchResult? initialPlace,
   })  : _setPlace = setPlace,
+        _initialPlace = initialPlace,
         super(key: key);
 
   static const String path = "/map";
   final void Function(PlacesSearchResult place)? _setPlace;
+  final PlacesSearchResult? _initialPlace;
 
   @override
   ConsumerState createState() => _MapPageState();
@@ -34,9 +37,48 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 
   @override
+  void initState() {
+    if (widget._initialPlace != null) {
+      setMarker(widget._initialPlace!);
+    }
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _phraseController.dispose();
     super.dispose();
+  }
+
+  void setMarker(PlacesSearchResult place) {
+    var location = place.geometry!.location;
+    LatLng latLng = LatLng(location.lat, location.lng);
+
+    //set marker
+    setState(() {
+      _markers.clear();
+
+      Marker marker = Marker(
+        position: latLng,
+        markerId: MarkerId(place.name),
+        infoWindow: InfoWindow(
+          title: place.name,
+          snippet: place.formattedAddress ?? "",
+        ),
+      );
+
+      _markers[place.name] = marker;
+    });
+
+    //animate to position
+    var newPosition = CameraPosition(
+      target: LatLng(location.lat, location.lng),
+      zoom: 15.0,
+    );
+
+    CameraUpdate update = CameraUpdate.newCameraPosition(newPosition);
+
+    mapController.animateCamera(update);
   }
 
   MapResult? _result;
@@ -99,35 +141,7 @@ class _MapPageState extends ConsumerState<MapPage> {
             GestureDetector(
               onTap: () {
                 if (place.geometry != null) {
-                  var location = place.geometry!.location;
-                  LatLng latLng = LatLng(location.lat, location.lng);
-
-                  //set marker
-                  setState(() {
-                    _markers.clear();
-
-                    Marker marker = Marker(
-                      position: latLng,
-                      markerId: MarkerId(place.name),
-                      infoWindow: InfoWindow(
-                        title: place.name,
-                        snippet: place.formattedAddress ?? "",
-                      ),
-                    );
-
-                    _markers[place.name] = marker;
-                  });
-
-                  //animate to position
-                  var newPosition = CameraPosition(
-                    target: LatLng(location.lat, location.lng),
-                    zoom: 15.0,
-                  );
-
-                  CameraUpdate update =
-                      CameraUpdate.newCameraPosition(newPosition);
-
-                  mapController.animateCamera(update);
+                  setMarker(place);
                 }
                 setState(() {
                   _selectedPlace = place;
