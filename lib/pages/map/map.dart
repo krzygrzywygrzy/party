@@ -30,7 +30,13 @@ class _MapPageState extends ConsumerState<MapPage> {
   @override
   void initState() {
     _phraseController.addListener(() {
-      handleSearch(_phraseController.text);
+      if (_phraseController.text.isNotEmpty) {
+        handleSearch(_phraseController.text);
+      } else {
+        setState(() {
+          _result = null;
+        });
+      }
     });
     super.initState();
   }
@@ -111,12 +117,9 @@ class _MapPageState extends ConsumerState<MapPage> {
           );
         }
         layout = ElevatedCard(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: children,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: children,
           ),
         );
       } else {

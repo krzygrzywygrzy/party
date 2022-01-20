@@ -15,30 +15,29 @@ class PlaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Container(
-        decoration: const BoxDecoration(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _name,
-              style: const TextStyle(),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _name,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
             ),
-            _address != null
-                ? Text(
-                    _address!,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                    ),
-                  )
-                : Container(),
-          ],
-        ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          _address != null
+              ? Text(
+                  _address!,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: const TextStyle(
+                    fontSize: 12.0,
+                  ),
+                )
+              : Container(),
+        ],
       ),
     );
   }
