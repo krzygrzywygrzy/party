@@ -30,7 +30,7 @@ class Event {
         minute: json["minute"],
         hour: json["hour"],
       ),
-      startDate: DateTime(json["startDate"]),
+      startDate: DateTime.parse(json["startDate"]),
     );
   }
 

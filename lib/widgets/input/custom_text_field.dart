@@ -20,9 +20,6 @@ class CustomTextField extends StatelessWidget {
       cursorColor: Colors.black,
       decoration: InputDecoration(
         hintText: hint,
-        // enabledBorder: UnderlineInputBorder(
-        //   borderSide: BorderSide(color: Colors.cyan),
-        // ),
         focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(
             color: Colors.black,

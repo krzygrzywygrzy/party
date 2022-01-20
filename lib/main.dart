@@ -6,6 +6,7 @@ import 'package:party/pages/add_event/add_event.dart';
 import 'package:party/pages/auth/signin.dart';
 import 'package:party/pages/auth/singup.dart';
 import 'package:party/pages/home/home.dart';
+import 'package:party/pages/map/map.dart';
 import 'package:party/pages/welcome/welcome.dart';
 
 import 'firebase_options.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         SignUp.path: (context) => const SignUp(),
         SignIn.path: (context) => const SignIn(),
         AddEvent.path: (context) => const AddEvent(),
+        MapPage.path: (context) => const MapPage(),
       },
     );
   }

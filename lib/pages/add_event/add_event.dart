@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/pages/account/account.dart';
+import 'package:party/pages/map/map.dart';
 import 'package:party/services/event_service.dart';
 import 'package:party/widgets/input/button.dart';
 import 'package:party/widgets/input/custom_text_field.dart';
@@ -40,6 +41,13 @@ class _AddEventState extends ConsumerState<AddEvent> {
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   bool _loading = false;
@@ -216,6 +224,29 @@ class _AddEventState extends ConsumerState<AddEvent> {
                                   fontSize: 30.0,
                                 ),
                               ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Row(
+                      children: [
+                        ElevatedCard(
+                          onClick: () =>
+                              Navigator.pushNamed(context, MapPage.path),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: const [
+                                Icon(Icons.place_sharp),
+                                SizedBox(
+                                  width: 12.0,
+                                ),
+                                Text("Select address"),
+                              ],
                             ),
                           ),
                         ),
