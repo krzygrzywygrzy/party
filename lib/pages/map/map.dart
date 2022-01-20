@@ -24,6 +24,7 @@ class _MapPageState extends ConsumerState<MapPage> {
   PlacesSearchResult? _selectedPlace;
 
   late GoogleMapController mapController;
+  final Map<String, Marker> _markers = {};
   final LatLng _startPosition = const LatLng(45.521563, -122.677433);
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -96,6 +97,25 @@ class _MapPageState extends ConsumerState<MapPage> {
               onTap: () {
                 if (place.geometry != null) {
                   var location = place.geometry!.location;
+                  LatLng latLng = LatLng(location.lat, location.lng);
+
+                  //set marker
+                  setState(() {
+                    _markers.clear();
+
+                    Marker marker = Marker(
+                      position: latLng,
+                      markerId: MarkerId(place.name),
+                      infoWindow: InfoWindow(
+                        title: place.name,
+                        snippet: place.formattedAddress ?? "",
+                      ),
+                    );
+
+                    _markers[place.name] = marker;
+                  });
+
+                  //animate to position
                   var newPosition = CameraPosition(
                     target: LatLng(location.lat, location.lng),
                     zoom: 15.0,
@@ -162,6 +182,7 @@ class _MapPageState extends ConsumerState<MapPage> {
               target: _startPosition,
               zoom: 11.0,
             ),
+            markers: _markers.values.toSet(),
           ),
           _selectedPlace != null
               ? Positioned(
