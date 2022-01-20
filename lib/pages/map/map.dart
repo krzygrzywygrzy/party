@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:party/core/map_results.dart';
 import 'package:party/services/map_services.dart';
 import 'package:party/widgets/cards/place_card.dart';
@@ -20,25 +21,12 @@ class MapPage extends ConsumerStatefulWidget {
 
 class _MapPageState extends ConsumerState<MapPage> {
   final _phraseController = TextEditingController();
+  PlacesSearchResult? _selectedPlace;
 
   late GoogleMapController mapController;
-  LatLng _center = const LatLng(45.521563, -122.677433);
+  final LatLng _startPosition = const LatLng(45.521563, -122.677433);
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-  }
-
-  @override
-  void initState() {
-    _phraseController.addListener(() {
-      if (_phraseController.text.isNotEmpty) {
-        handleSearch(_phraseController.text);
-      } else {
-        setState(() {
-          _result = null;
-        });
-      }
-    });
-    super.initState();
   }
 
   @override
@@ -49,9 +37,9 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   MapResult? _result;
   Future<void> handleSearch(String phrase) async {
-    // setState(() {
-    //   _result = MapResultLoading();
-    // });
+    setState(() {
+      _result = MapResultLoading();
+    });
 
     var res = await MapService.findAddress(phrase);
     res.fold((l) {
@@ -69,22 +57,26 @@ class _MapPageState extends ConsumerState<MapPage> {
     Widget layout = Container();
 
     if (_result is MapResultFailure) {
-      layout = const ElevatedCard(
-        child: Padding(
-          padding: EdgeInsets.all(12.0),
-          child: Text(
-            "Error occurred...",
-            textAlign: TextAlign.center,
+      layout = const Expanded(
+        child: ElevatedCard(
+          child: Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Text(
+              "Error occurred...",
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       );
     } else if (_result is MapResultLoading) {
-      layout = const ElevatedCard(
-        child: Padding(
-          padding: EdgeInsets.all(12.0),
-          child: Text(
-            "Loading...",
-            textAlign: TextAlign.center,
+      layout = const Expanded(
+        child: ElevatedCard(
+          child: Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Text(
+              "Loading...",
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       );
@@ -103,11 +95,23 @@ class _MapPageState extends ConsumerState<MapPage> {
             GestureDetector(
               onTap: () {
                 if (place.geometry != null) {
-                  setState(() {
-                    _center = LatLng(place.geometry!.location.lat,
-                        place.geometry!.location.lng);
-                  });
+                  var location = place.geometry!.location;
+                  var newPosition = CameraPosition(
+                    target: LatLng(location.lat, location.lng),
+                    zoom: 15.0,
+                  );
+
+                  CameraUpdate update =
+                      CameraUpdate.newCameraPosition(newPosition);
+
+                  mapController.animateCamera(update);
                 }
+                setState(() {
+                  _selectedPlace = place;
+                  _result = null;
+                  _phraseController.text =
+                      "${place.name}${place.formattedAddress != null ? "," : ""} ${place.formattedAddress ?? ""}";
+                });
               },
               child: PlaceCard(
                 name: place.name,
@@ -116,19 +120,23 @@ class _MapPageState extends ConsumerState<MapPage> {
             ),
           );
         }
-        layout = ElevatedCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: children,
+        layout = Expanded(
+          child: ElevatedCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: children,
+            ),
           ),
         );
       } else {
-        layout = const ElevatedCard(
-          child: Padding(
-            padding: EdgeInsets.all(12.0),
-            child: Text(
-              "Nothing was found...",
-              textAlign: TextAlign.center,
+        layout = const Expanded(
+          child: ElevatedCard(
+            child: Padding(
+              padding: EdgeInsets.all(12.0),
+              child: Text(
+                "Nothing was found...",
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         );
@@ -151,26 +159,28 @@ class _MapPageState extends ConsumerState<MapPage> {
             onMapCreated: _onMapCreated,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: _center,
+              target: _startPosition,
               zoom: 11.0,
             ),
           ),
-          Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Button(
-                  label: "Select",
-                  onClick: () {
-                    //TODO: select place
-                  },
-                ),
-              ],
-            ),
-          ),
+          _selectedPlace != null
+              ? Positioned(
+                  bottom: 16,
+                  left: 16,
+                  right: 16,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Button(
+                        label: "Select",
+                        onClick: () {
+                          //TODO: select place
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
           Positioned(
             top: 16.0,
             left: 16.0,
@@ -180,22 +190,38 @@ class _MapPageState extends ConsumerState<MapPage> {
                 children: [
                   Row(
                     children: [
-                      ElevatedCard(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                          ),
-                          child: TextField(
-                            cursorColor: Colors.black,
-                            controller: _phraseController,
-                            style: const TextStyle(
-                              fontSize: 14.0,
+                      Expanded(
+                        child: ElevatedCard(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
                             ),
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "address...",
-                              hintStyle: TextStyle(
+                            child: TextField(
+                              cursorColor: Colors.black,
+                              controller: _phraseController,
+                              style: const TextStyle(
                                 fontSize: 14.0,
+                              ),
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "address...",
+                                hintStyle: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: GestureDetector(
+                          onTap: () => handleSearch(_phraseController.text),
+                          child: const SizedBox(
+                            child: ElevatedCard(
+                              child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Icon(Icons.search),
                               ),
                             ),
                           ),

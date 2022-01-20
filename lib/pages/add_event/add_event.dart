@@ -188,23 +188,25 @@ class _AddEventState extends ConsumerState<AddEvent> {
                     ),
                     Row(
                       children: [
-                        ElevatedCard(
-                          height: 80.0,
-                          onClick: pickEventDate,
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "${_startDate.day}.${_startDate.month}",
-                                    style: const TextStyle(
-                                      fontSize: 26.0,
+                        Expanded(
+                          child: ElevatedCard(
+                            height: 80.0,
+                            onClick: pickEventDate,
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${_startDate.day}.${_startDate.month}",
+                                      style: const TextStyle(
+                                        fontSize: 26.0,
+                                      ),
                                     ),
-                                  ),
-                                  Text("${_startDate.year}"),
-                                ],
+                                    Text("${_startDate.year}"),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -212,16 +214,18 @@ class _AddEventState extends ConsumerState<AddEvent> {
                         const SizedBox(
                           width: 16.0,
                         ),
-                        ElevatedCard(
-                          onClick: pickEventTime,
-                          height: 80.0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                              child: Text(
-                                "${_startTime.hour}:${_startTime.minute}",
-                                style: const TextStyle(
-                                  fontSize: 30.0,
+                        Expanded(
+                          child: ElevatedCard(
+                            onClick: pickEventTime,
+                            height: 80.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Text(
+                                  "${_startTime.hour}:${_startTime.minute}",
+                                  style: const TextStyle(
+                                    fontSize: 30.0,
+                                  ),
                                 ),
                               ),
                             ),
@@ -234,19 +238,21 @@ class _AddEventState extends ConsumerState<AddEvent> {
                     ),
                     Row(
                       children: [
-                        ElevatedCard(
-                          onClick: () =>
-                              Navigator.pushNamed(context, MapPage.path),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: const [
-                                Icon(Icons.place_sharp),
-                                SizedBox(
-                                  width: 12.0,
-                                ),
-                                Text("Select address"),
-                              ],
+                        Expanded(
+                          child: ElevatedCard(
+                            onClick: () =>
+                                Navigator.pushNamed(context, MapPage.path),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.place_sharp),
+                                  SizedBox(
+                                    width: 12.0,
+                                  ),
+                                  Text("Select address"),
+                                ],
+                              ),
                             ),
                           ),
                         ),

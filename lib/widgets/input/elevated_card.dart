@@ -17,17 +17,15 @@ class ElevatedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SizedBox(
-        height: _height,
-        child: GestureDetector(
-          onTap: _onClick,
-          child: Material(
-            elevation: 2,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            child: _child,
-          ),
+    return SizedBox(
+      height: _height,
+      child: GestureDetector(
+        onTap: _onClick,
+        child: Material(
+          elevation: 2,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          child: _child,
         ),
       ),
     );
