@@ -16,3 +16,5 @@ class FirestoreFailure implements Failure {
   FirestoreFailure(this.message);
   final String? message;
 }
+
+class MapFailure implements Failure {}

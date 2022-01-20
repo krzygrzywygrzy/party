@@ -62,34 +62,6 @@ class _MapPageState extends ConsumerState<MapPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: [
-                    ElevatedCard(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                        ),
-                        child: TextField(
-                          cursorColor: Colors.black,
-                          controller: _phraseController,
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                          ),
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "address...",
-                            hintStyle: TextStyle(
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 4.0,
-                ),
                 Button(
                   label: "Select",
                   onClick: () {
@@ -97,6 +69,38 @@ class _MapPageState extends ConsumerState<MapPage> {
                   },
                 ),
               ],
+            ),
+          ),
+          Positioned(
+            top: 16.0,
+            left: 16.0,
+            right: 16.0,
+            child: SafeArea(
+              child: Row(
+                children: [
+                  ElevatedCard(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                      ),
+                      child: TextField(
+                        cursorColor: Colors.black,
+                        controller: _phraseController,
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                        ),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "address...",
+                          hintStyle: TextStyle(
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
