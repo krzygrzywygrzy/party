@@ -38,9 +38,9 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   @override
   void initState() {
-    if (widget._initialPlace != null) {
-      setMarker(widget._initialPlace!);
-    }
+    // if (widget._initialPlace != null) {
+    //   setMarker(widget._initialPlace!);
+    // }
     super.initState();
   }
 
@@ -196,8 +196,11 @@ class _MapPageState extends ConsumerState<MapPage> {
             onMapCreated: _onMapCreated,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: _startPosition,
-              zoom: 11.0,
+              target: widget._initialPlace == null
+                  ? _startPosition
+                  : LatLng(widget._initialPlace!.geometry!.location.lat,
+                      widget._initialPlace!.geometry!.location.lng),
+              zoom: widget._initialPlace == null ? 11.0 : 15.0,
             ),
             markers: _markers.values.toSet(),
           ),
@@ -216,6 +219,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                               _selectedPlace != null) {
                             widget._setPlace!(_selectedPlace!);
                           }
+                          Navigator.pop(context);
                         },
                       ),
                     ],

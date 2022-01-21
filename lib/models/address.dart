@@ -9,12 +9,14 @@ class Address {
     this.formatedAddress,
     this.latitude,
     this.longitude,
+    required this.reference,
   });
 
   String name;
   String? formatedAddress;
   double? latitude;
   double? longitude;
+  String reference;
 
   factory Address.fromJson(Map<String, dynamic> json) =>
       _$AddressFromJson(json);

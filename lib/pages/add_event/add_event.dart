@@ -5,6 +5,7 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/pages/account/account.dart';
+import 'package:party/pages/home/home.dart';
 import 'package:party/pages/map/map.dart';
 import 'package:party/services/event_service.dart';
 import 'package:party/widgets/input/button.dart';
@@ -30,7 +31,7 @@ class _AddEventState extends ConsumerState<AddEvent> {
   bool _invitationNeeded = false;
   DateTime _startDate = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
-  PlacesSearchResult? _selectedPlace;
+  PlacesSearchResult? _place;
 
   @override
   void initState() {
@@ -69,6 +70,7 @@ class _AddEventState extends ConsumerState<AddEvent> {
         organizerUID: FirebaseAuth.instance.currentUser!.uid,
         startDate: _startDate,
         startTime: _startTime,
+        place: _place,
       ),
     );
 
@@ -86,9 +88,9 @@ class _AddEventState extends ConsumerState<AddEvent> {
           message = "Unknown error occurred";
         });
       }
-    }, (r) {
-      //TODO: go to event page or sth
-    });
+    },
+        (r) => Navigator.of(context).pushNamedAndRemoveUntil(
+            Home.path, (Route<dynamic> route) => false));
   }
 
   void pickEventDate() async {
@@ -248,9 +250,10 @@ class _AddEventState extends ConsumerState<AddEvent> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MapPage(
+                                  initialPlace: _place,
                                   setPlace: (place) {
                                     setState(() {
-                                      _selectedPlace = place;
+                                      _place = place;
                                     });
                                   },
                                 ),
@@ -264,9 +267,14 @@ class _AddEventState extends ConsumerState<AddEvent> {
                                   const SizedBox(
                                     width: 12.0,
                                   ),
-                                  Text(_selectedPlace == null
-                                      ? "Select address"
-                                      : "${_selectedPlace!.name}, ${_selectedPlace!.formattedAddress ?? ""}"),
+                                  Expanded(
+                                    child: Text(
+                                      _place == null
+                                          ? "Select address"
+                                          : "${_place!.name}, ${_place!.formattedAddress ?? ""}",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_webservice/places.dart';
 
 class Event {
   Event({
@@ -9,6 +10,7 @@ class Event {
     required this.organizerUID,
     required this.startDate,
     required this.startTime,
+    this.place,
   });
 
   final String? id;
@@ -18,7 +20,9 @@ class Event {
   final String organizerUID;
   final DateTime startDate;
   final TimeOfDay startTime;
+  final PlacesSearchResult? place;
 
+  //TIME OF DAY WON'T BE AUTOMATICALLY CONVERTED TO JSON BY JSON_ANNOTATION
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
       title: json["title"],
@@ -31,6 +35,7 @@ class Event {
         hour: json["hour"],
       ),
       startDate: DateTime.parse(json["startDate"]),
+      place: json["place"],
     );
   }
 
@@ -43,6 +48,7 @@ class Event {
       "startDate": startDate.toIso8601String(),
       "minute": startTime.minute,
       "hour": startTime.hour,
+      "place": place?.toJson(),
     };
   }
 }
