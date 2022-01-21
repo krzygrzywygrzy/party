@@ -61,14 +61,16 @@ class _AddEventState extends ConsumerState<AddEvent> {
 
     FirebaseAuth.instance.currentUser!.uid;
 
-    var res = await EventService.addEvent(Event(
-      title: _titleController.text,
-      invitationNeeded: _invitationNeeded,
-      description: _descriptionController.text,
-      organizerUID: FirebaseAuth.instance.currentUser!.uid,
-      startDate: _startDate,
-      startTime: _startTime,
-    ));
+    var res = await EventService.addEvent(
+      Event(
+        title: _titleController.text,
+        invitationNeeded: _invitationNeeded,
+        description: _descriptionController.text,
+        organizerUID: FirebaseAuth.instance.currentUser!.uid,
+        startDate: _startDate,
+        startTime: _startTime,
+      ),
+    );
 
     setState(() {
       _loading = false;

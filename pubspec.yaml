@@ -45,6 +45,8 @@ dependencies:
   google_maps_webservice: ^0.0.20-nullsafety.4
 
 dev_dependencies:
+  json_serializable: ^6.1.4
+  build_runner: ^2.1.7
   flutter_test:
     sdk: flutter
 
