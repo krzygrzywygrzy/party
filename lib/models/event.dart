@@ -35,7 +35,7 @@ class Event {
         hour: json["hour"],
       ),
       startDate: DateTime.parse(json["startDate"]),
-      place: json["place"],
+      place: Place.fromJson(json["place"]),
     );
   }
 
@@ -48,7 +48,7 @@ class Event {
       "startDate": startDate.toIso8601String(),
       "minute": startTime.minute,
       "hour": startTime.hour,
-      "place": place?.toJson(),
+      "place": place != null ? place!.toJson() : null,
     };
   }
 }

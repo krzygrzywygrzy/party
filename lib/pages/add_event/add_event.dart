@@ -61,6 +61,7 @@ class _AddEventState extends ConsumerState<AddEvent> {
       _loading = true;
     });
 
+    
     var res = await EventService.addEvent(
       Event(
         title: _titleController.text,
@@ -80,8 +81,6 @@ class _AddEventState extends ConsumerState<AddEvent> {
               ),
       ),
     );
-
-    print("asd");
 
     setState(() {
       _loading = false;
