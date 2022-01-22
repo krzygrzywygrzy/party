@@ -31,7 +31,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   late GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
-  final LatLng _startPosition = const LatLng(45.521563, -122.677433);
+  final LatLng _startPosition = const LatLng(50.0614, 19.9383);
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }

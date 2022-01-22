@@ -8,6 +8,7 @@ import 'package:party/models/user.dart' as party;
 import 'package:party/pages/account/account.dart';
 import 'package:party/services/auth_service.dart';
 import 'package:party/widgets/input/button.dart';
+import 'package:party/widgets/input/elevated_card.dart';
 import 'package:party/widgets/layout/user_card.dart';
 import 'package:party/widgets/layout/user_skeleteon.dart';
 
@@ -110,39 +111,72 @@ class _EventPageState extends ConsumerState<EventPage> {
                       height: 16.0,
                     ),
                     FutureBuilder(
-                        future: AuthService.getUser(widget._event.organizerUID),
-                        builder: (
-                          context,
-                          AsyncSnapshot<Either<Failure, party.User>> snapshot,
-                        ) {
-                          Widget layout = const UserSkeleton();
-                          if (snapshot.hasData) {
-                            snapshot.data!.fold(
-                                (l) => {},
-                                (r) => {
-                                      layout = Column(
-                                        children: [
-                                          const Text(
-                                            "organized by:",
-                                            style: TextStyle(
-                                                color: Colors.black54),
+                      future: AuthService.getUser(widget._event.organizerUID),
+                      builder: (
+                        context,
+                        AsyncSnapshot<Either<Failure, party.User>> snapshot,
+                      ) {
+                        Widget layout = const UserSkeleton();
+                        if (snapshot.hasData) {
+                          snapshot.data!.fold(
+                              (l) => {},
+                              (r) => {
+                                    layout = Column(
+                                      children: [
+                                        const Text(
+                                          "organized by:",
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ),
+                                        const SizedBox(
+                                          height: 4.0,
+                                        ),
+                                        UserCard(
+                                          user: r,
+                                        ),
+                                      ],
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    ),
+                                  });
+                        } else if (snapshot.hasError) {
+                          //TODO: display error
+                        }
+                        return layout;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    widget._event.place != null
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedCard(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.place,
+                                        ),
+                                        const SizedBox(
+                                          width: 12.0,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${widget._event.place!.name}, ${widget._event.place!.formattedAddress ?? ""}",
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          const SizedBox(
-                                            height: 4.0,
-                                          ),
-                                          UserCard(
-                                            user: r,
-                                          ),
-                                        ],
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                      ),
-                                    });
-                          } else if (snapshot.hasError) {
-                            //TODO: display error
-                          }
-                          return layout;
-                        }),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        : Container(),
                   ],
                 ),
               ),

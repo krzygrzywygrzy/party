@@ -21,7 +21,6 @@ class EventService {
     } on FirebaseException catch (e) {
       return Left(FirestoreFailure(e.message));
     } catch (e) {
-      print(e);
       return Left(UnknownFailure());
     }
   }

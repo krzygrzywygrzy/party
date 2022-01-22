@@ -9,11 +9,14 @@ import 'package:party/pages/account/account.dart';
 import 'package:party/pages/home/home.dart';
 import 'package:party/pages/map/map.dart';
 import 'package:party/services/event_service.dart';
+import 'package:party/services/image_service.dart';
 import 'package:party/widgets/input/button.dart';
 import 'package:party/widgets/input/custom_text_field.dart';
 import 'package:party/widgets/input/elevated_card.dart';
 import 'package:party/widgets/input/elevated_text_field.dart';
 import 'package:party/widgets/input/selective_button.dart';
+
+//TODO: separate parts into own files
 
 class AddEvent extends ConsumerStatefulWidget {
   const AddEvent({
@@ -33,6 +36,7 @@ class _AddEventState extends ConsumerState<AddEvent> {
   DateTime _startDate = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
   PlacesSearchResult? _place;
+  final ImageService _imageService = ImageService();
 
   @override
   void initState() {
@@ -61,7 +65,6 @@ class _AddEventState extends ConsumerState<AddEvent> {
       _loading = true;
     });
 
-    
     var res = await EventService.addEvent(
       Event(
         title: _titleController.text,
@@ -292,6 +295,30 @@ class _AddEventState extends ConsumerState<AddEvent> {
                               ),
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Row(
+                      children: [
+                        Button(
+                          label: "Pick photo",
+                          onClick: () async {
+                            await _imageService.getImageFromGallery();
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        Button(
+                          label: "Take photo",
+                          onClick: () async {
+                            await _imageService.getImageFromCamera();
+                            setState(() {});
+                          },
                         ),
                       ],
                     ),

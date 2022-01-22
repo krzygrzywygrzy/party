@@ -15,4 +15,8 @@ class MapService {
       return Left(MapFailure());
     }
   }
+
+  static Future<void> openGoogleMaps() async {
+    throw UnimplementedError();
+  }
 }
