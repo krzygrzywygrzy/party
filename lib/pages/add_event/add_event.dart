@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
+import 'package:party/models/place.dart';
 import 'package:party/pages/account/account.dart';
 import 'package:party/pages/home/home.dart';
 import 'package:party/pages/map/map.dart';
@@ -60,8 +61,6 @@ class _AddEventState extends ConsumerState<AddEvent> {
       _loading = true;
     });
 
-    FirebaseAuth.instance.currentUser!.uid;
-
     var res = await EventService.addEvent(
       Event(
         title: _titleController.text,
@@ -70,9 +69,19 @@ class _AddEventState extends ConsumerState<AddEvent> {
         organizerUID: FirebaseAuth.instance.currentUser!.uid,
         startDate: _startDate,
         startTime: _startTime,
-        place: _place,
+        place: _place == null
+            ? null
+            : Place(
+                name: _place!.name,
+                reference: _place!.reference,
+                formattedAddress: _place!.formattedAddress,
+                longitude: _place!.geometry?.location.lng,
+                latitude: _place!.geometry?.location.lat,
+              ),
       ),
     );
+
+    print("asd");
 
     setState(() {
       _loading = false;
@@ -88,6 +97,11 @@ class _AddEventState extends ConsumerState<AddEvent> {
           message = "Unknown error occurred";
         });
       }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message ?? ""),
+        ),
+      );
     },
         (r) => Navigator.of(context).pushNamedAndRemoveUntil(
             Home.path, (Route<dynamic> route) => false));

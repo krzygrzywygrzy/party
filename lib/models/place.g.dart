@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'address.dart';
+part of 'place.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Address _$AddressFromJson(Map<String, dynamic> json) => Address(
+Place _$PlaceFromJson(Map<String, dynamic> json) => Place(
       name: json['name'] as String,
-      formatedAddress: json['formatedAddress'] as String?,
+      formattedAddress: json['formattedAddress'] as String?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
       reference: json['reference'] as String,
     );
 
-Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
+Map<String, dynamic> _$PlaceToJson(Place instance) => <String, dynamic>{
       'name': instance.name,
-      'formatedAddress': instance.formatedAddress,
+      'formattedAddress': instance.formattedAddress,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'reference': instance.reference,

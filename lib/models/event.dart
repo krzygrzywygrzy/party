@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_webservice/places.dart';
+import 'package:party/models/place.dart';
 
 class Event {
   Event({
@@ -20,7 +20,7 @@ class Event {
   final String organizerUID;
   final DateTime startDate;
   final TimeOfDay startTime;
-  final PlacesSearchResult? place;
+  final Place? place;
 
   //TIME OF DAY WON'T BE AUTOMATICALLY CONVERTED TO JSON BY JSON_ANNOTATION
   factory Event.fromJson(Map<String, dynamic> json) {
