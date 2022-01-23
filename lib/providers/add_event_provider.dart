@@ -70,9 +70,17 @@ class AddEventProvider extends StateNotifier<AddEvent> {
     state = AddEvent(loading: false, event: newEvent);
   }
 
-  void addImage(File img) {}
+  Future<void> addEvent() async {
+    state = AddEvent(
+      loading: true,
+      event: state.event,
+    );
 
-  Future<void> addEvent() async {}
+    state = AddEvent(
+      loading: false,
+      event: state.event,
+    );
+  }
 }
 
 final addEventProvider = StateNotifierProvider<AddEventProvider, AddEvent>(
