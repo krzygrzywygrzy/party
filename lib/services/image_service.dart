@@ -20,4 +20,8 @@ class ImageService {
       files.add(File(pickedFile.path));
     }
   }
+
+  Future uploadImages() async {
+    throw UnimplementedError();
+  }
 }

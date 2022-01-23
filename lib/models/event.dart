@@ -11,6 +11,7 @@ class Event {
     required this.startDate,
     required this.startTime,
     this.place,
+    this.photoLinks,
   });
 
   final String? id;
@@ -21,6 +22,7 @@ class Event {
   DateTime startDate;
   TimeOfDay startTime;
   Place? place;
+  List<String>? photoLinks = [];
 
   //TIME OF DAY WON'T BE AUTOMATICALLY CONVERTED TO JSON BY JSON_ANNOTATION
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -36,6 +38,7 @@ class Event {
       ),
       startDate: DateTime.parse(json["startDate"]),
       place: Place.fromJson(json["place"]),
+      photoLinks: json["photoLinks"],
     );
   }
 
@@ -49,6 +52,7 @@ class Event {
       "minute": startTime.minute,
       "hour": startTime.hour,
       "place": place != null ? place!.toJson() : null,
+      "photoLinks": photoLinks,
     };
   }
 }

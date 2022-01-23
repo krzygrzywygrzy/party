@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/models/place.dart';
+import 'package:party/services/image_service.dart';
 
 class AddEvent {
   AddEvent({
@@ -29,6 +31,8 @@ class AddEventProvider extends StateNotifier<AddEvent> {
             ),
           ),
         );
+
+  final ImageService imageService = ImageService();
 
   void setTitle(String title) {
     var newState = state;
@@ -66,9 +70,9 @@ class AddEventProvider extends StateNotifier<AddEvent> {
     state = AddEvent(loading: false, event: newEvent);
   }
 
-  Future<void> addEvent() async {
-    print(state.event.toJson());
-  }
+  void addImage(File img) {}
+
+  Future<void> addEvent() async {}
 }
 
 final addEventProvider = StateNotifierProvider<AddEventProvider, AddEvent>(
