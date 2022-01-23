@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:party/core/map_results.dart';
+import 'package:party/models/place.dart';
+import 'package:party/providers/add_event_provider.dart';
 import 'package:party/services/map_services.dart';
 import 'package:party/widgets/cards/place_card.dart';
 import 'package:party/widgets/input/button.dart';
@@ -11,15 +13,9 @@ import 'package:party/widgets/input/elevated_card.dart';
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({
     Key? key,
-    void Function(PlacesSearchResult place)? setPlace,
-    PlacesSearchResult? initialPlace,
-  })  : _setPlace = setPlace,
-        _initialPlace = initialPlace,
-        super(key: key);
+  }) : super(key: key);
 
   static const String path = "/map";
-  final void Function(PlacesSearchResult place)? _setPlace;
-  final PlacesSearchResult? _initialPlace;
 
   @override
   ConsumerState createState() => _MapPageState();
@@ -189,6 +185,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final event = ref.watch(addEventProvider).event;
     return Scaffold(
       body: Stack(
         children: [
@@ -196,11 +193,10 @@ class _MapPageState extends ConsumerState<MapPage> {
             onMapCreated: _onMapCreated,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: widget._initialPlace == null
+              target: event.place == null
                   ? _startPosition
-                  : LatLng(widget._initialPlace!.geometry!.location.lat,
-                      widget._initialPlace!.geometry!.location.lng),
-              zoom: widget._initialPlace == null ? 11.0 : 15.0,
+                  : LatLng(event.place!.latitude!, event.place!.latitude!),
+              zoom: event.place == null ? 11.0 : 15.0,
             ),
             markers: _markers.values.toSet(),
           ),
@@ -215,10 +211,18 @@ class _MapPageState extends ConsumerState<MapPage> {
                       Button(
                         label: "Select",
                         onClick: () {
-                          // if (widget._setPlace != null &&
-                          //     _selectedPlace != null) {
-                          //   widget._setPlace!(_selectedPlace!);
-                          // }
+                          ref.read(addEventProvider.notifier).setPlace(
+                                Place(
+                                  name: _selectedPlace!.name,
+                                  reference: _selectedPlace!.reference,
+                                  formattedAddress:
+                                      _selectedPlace!.formattedAddress,
+                                  latitude:
+                                      _selectedPlace!.geometry?.location.lat,
+                                  longitude:
+                                      _selectedPlace!.geometry?.location.lng,
+                                ),
+                              );
                           Navigator.pop(context);
                         },
                       ),
