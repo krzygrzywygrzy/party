@@ -8,6 +8,15 @@ class DateAndTime extends ConsumerWidget {
 
   void pickEventDate(WidgetRef ref, BuildContext context) async {
     var newDate = await showDatePicker(
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+              colorScheme: const ColorScheme.light().copyWith(
+            primary: Colors.grey,
+          )),
+          child: child ?? Container(),
+        );
+      },
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
@@ -20,6 +29,15 @@ class DateAndTime extends ConsumerWidget {
 
   void pickEventTime(WidgetRef ref, BuildContext context) async {
     var newTime = await showTimePicker(
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+              colorScheme: const ColorScheme.light().copyWith(
+            primary: Colors.grey,
+          )),
+          child: child ?? Container(),
+        );
+      },
       context: context,
       initialTime: TimeOfDay.now(),
     );
