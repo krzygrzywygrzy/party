@@ -43,13 +43,16 @@ class DateAndTime extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Icon(
+                      Icons.date_range,
+                      size: 24.0,
+                    ),
                     Text(
-                      "${event.startDate.day}.${event.startDate.month}",
+                      "${event.startDate.day}.${event.startDate.month}.${event.startDate.year}",
                       style: const TextStyle(
-                        fontSize: 26.0,
+                        fontSize: 20.0,
                       ),
                     ),
-                    Text("${event.startDate.year}"),
                   ],
                 ),
               ),
@@ -65,13 +68,20 @@ class DateAndTime extends ConsumerWidget {
             height: 80.0,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Text(
-                  "${event.startTime.hour}:${event.startTime.minute}",
-                  style: const TextStyle(
-                    fontSize: 30.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.timer,
+                    size: 24.0,
                   ),
-                ),
+                  Text(
+                    "${event.startTime.hour}:${event.startTime.minute}",
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

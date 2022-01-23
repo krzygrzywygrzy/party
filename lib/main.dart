@@ -29,6 +29,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: (context, child) {
+        return ScrollConfiguration(
+            behavior: MyBehavior(), child: child ?? Container());
+      },
       debugShowCheckedModeBanner: false,
       title: 'Party',
       theme: ThemeData(
@@ -45,5 +49,13 @@ class MyApp extends StatelessWidget {
         MapPage.path: (context) => const MapPage(),
       },
     );
+  }
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
   }
 }
