@@ -35,7 +35,10 @@ class _HomeState extends ConsumerState<Home> {
       }
     });
 
+    // WidgetsBinding.instance!.addPersistentFrameCallback((_) {
     ref.read(homeProvider.notifier).load();
+    // });
+
     super.initState();
   }
 

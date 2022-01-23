@@ -31,6 +31,8 @@ class HomeEvents extends ConsumerWidget {
       return Center(
         child: Text(message ?? "Unknown error occurred"),
       );
+    } else if (homeData.events == null) {
+      return Container();
     } else {
       return buildEvents(homeData.events!);
     }

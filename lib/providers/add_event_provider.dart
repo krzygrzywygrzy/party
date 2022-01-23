@@ -43,27 +43,27 @@ class AddEventProvider extends StateNotifier<AddEvent> {
   }
 
   void setInvitationNeeded(bool inv) {
-    var newState = state;
-    newState.event.invitationNeeded = inv;
-    state = newState;
+    var newEvent = state.event;
+    newEvent.invitationNeeded = inv;
+    state = AddEvent(loading: false, event: newEvent);
   }
 
   void setStartDate(DateTime date) {
-    var newState = state;
-    newState.event.startDate = date;
-    state = newState;
+    var newEvent = state.event;
+    newEvent.startDate = date;
+    state = AddEvent(loading: false, event: newEvent);
   }
 
   void setStartTime(TimeOfDay time) {
-    var newState = state;
-    newState.event.startTime = time;
-    state = newState;
+    var newEvent = state.event;
+    newEvent.startTime = time;
+    state = AddEvent(loading: false, event: newEvent);
   }
 
   void setPlace(Place place) {
-    var newState = state;
-    newState.event.place = place;
-    state = newState;
+    var newEvent = state.event;
+    newEvent.place = place;
+    state = AddEvent(loading: false, event: newEvent);
   }
 
   Future<void> addEvent() async {

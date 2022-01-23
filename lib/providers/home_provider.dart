@@ -19,14 +19,16 @@ class HomeProvider extends StateNotifier<Home> {
   HomeProvider() : super(Home(loading: false));
 
   load() async {
-    state = Home(loading: true);
+    if (state.events == null) {
+      state = Home(loading: true);
 
-    var res = await EventService.getAllEvents();
+      var res = await EventService.getAllEvents();
 
-    res.fold(
-      (l) => state = Home(loading: false, failure: l),
-      (r) => state = Home(loading: false, events: r),
-    );
+      res.fold(
+        (l) => state = Home(loading: false, failure: l),
+        (r) => state = Home(loading: false, events: r),
+      );
+    }
   }
 }
 
