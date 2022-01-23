@@ -215,10 +215,10 @@ class _MapPageState extends ConsumerState<MapPage> {
                       Button(
                         label: "Select",
                         onClick: () {
-                          if (widget._setPlace != null &&
-                              _selectedPlace != null) {
-                            widget._setPlace!(_selectedPlace!);
-                          }
+                          // if (widget._setPlace != null &&
+                          //     _selectedPlace != null) {
+                          //   widget._setPlace!(_selectedPlace!);
+                          // }
                           Navigator.pop(context);
                         },
                       ),

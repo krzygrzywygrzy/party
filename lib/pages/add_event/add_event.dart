@@ -6,8 +6,14 @@ import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/models/place.dart';
 import 'package:party/pages/account/account.dart';
+import 'package:party/pages/add_event/date_and_time.dart';
+import 'package:party/pages/add_event/description.dart';
+import 'package:party/pages/add_event/invitation_needed.dart';
+import 'package:party/pages/add_event/place.dart';
+import 'package:party/pages/add_event/title.dart' as party;
 import 'package:party/pages/home/home.dart';
 import 'package:party/pages/map/map.dart';
+import 'package:party/providers/add_event_provider.dart';
 import 'package:party/services/event_service.dart';
 import 'package:party/services/image_service.dart';
 import 'package:party/widgets/input/button.dart';
@@ -31,12 +37,8 @@ class AddEvent extends ConsumerStatefulWidget {
 
 class _AddEventState extends ConsumerState<AddEvent> {
   final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  bool _invitationNeeded = false;
-  DateTime _startDate = DateTime.now();
-  TimeOfDay _startTime = TimeOfDay.now();
+
   PlacesSearchResult? _place;
-  final ImageService _imageService = ImageService();
 
   @override
   void initState() {
@@ -52,89 +54,8 @@ class _AddEventState extends ConsumerState<AddEvent> {
   }
 
   @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
-  }
-
-  bool _loading = false;
-  String? message;
-  Future<void> addEvent() async {
-    setState(() {
-      _loading = true;
-    });
-
-    var res = await EventService.addEvent(
-      Event(
-        title: _titleController.text,
-        invitationNeeded: _invitationNeeded,
-        description: _descriptionController.text,
-        organizerUID: FirebaseAuth.instance.currentUser!.uid,
-        startDate: _startDate,
-        startTime: _startTime,
-        place: _place == null
-            ? null
-            : Place(
-                name: _place!.name,
-                reference: _place!.reference,
-                formattedAddress: _place!.formattedAddress,
-                longitude: _place!.geometry?.location.lng,
-                latitude: _place!.geometry?.location.lat,
-              ),
-      ),
-    );
-
-    setState(() {
-      _loading = false;
-    });
-
-    res.fold((l) {
-      if (l is FirestoreFailure) {
-        setState(() {
-          message = l.message;
-        });
-      } else {
-        setState(() {
-          message = "Unknown error occurred";
-        });
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message ?? ""),
-        ),
-      );
-    },
-        (r) => Navigator.of(context).pushNamedAndRemoveUntil(
-            Home.path, (Route<dynamic> route) => false));
-  }
-
-  void pickEventDate() async {
-    var newDate = await showDatePicker(
-        context: context,
-        initialDate: _startDate,
-        firstDate: DateTime.now(),
-        lastDate: DateTime.now().add(const Duration(days: 365)));
-    if (newDate != null) {
-      setState(() {
-        _startDate = newDate;
-      });
-    }
-  }
-
-  void pickEventTime() async {
-    var newTime =
-        await showTimePicker(context: context, initialTime: _startTime);
-
-    if (newTime != null) {
-      setState(() {
-        _startTime = newTime;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final event = ref.watch(addEventProvider);
     return Scaffold(
       backgroundColor: const Color(0xfff6f6f6),
       body: SafeArea(
@@ -166,161 +87,25 @@ class _AddEventState extends ConsumerState<AddEvent> {
                     const SizedBox(
                       height: 16.0,
                     ),
-                    CustomTextField(
-                      controller: _titleController,
-                      hint: "title...",
-                    ),
+                    const party.Title(),
                     const SizedBox(
                       height: 8.0,
                     ),
-                    Row(
-                      children: [
-                        SelectiveButton(
-                          caption: "Private 🔒",
-                          selected: _invitationNeeded == true,
-                          onTap: () {
-                            setState(() {
-                              _invitationNeeded = true;
-                            });
-                          },
-                        ),
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        SelectiveButton(
-                          caption: "Public 👓",
-                          selected: _invitationNeeded == false,
-                          onTap: () {
-                            setState(() {
-                              _invitationNeeded = false;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
+                    const InvitationNeeded(),
                     const SizedBox(
                       height: 8.0,
                     ),
-                    ElevatedTextField(
-                      controller: _descriptionController,
-                      hint: "description...",
-                    ),
+                    const Description(),
                     const SizedBox(
                       height: 16.0,
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedCard(
-                            height: 80.0,
-                            onClick: pickEventDate,
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "${_startDate.day}.${_startDate.month}",
-                                      style: const TextStyle(
-                                        fontSize: 26.0,
-                                      ),
-                                    ),
-                                    Text("${_startDate.year}"),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 16.0,
-                        ),
-                        Expanded(
-                          child: ElevatedCard(
-                            onClick: pickEventTime,
-                            height: 80.0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  "${_startTime.hour}:${_startTime.minute}",
-                                  style: const TextStyle(
-                                    fontSize: 30.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const DateAndTime(),
                     const SizedBox(
                       height: 16.0,
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedCard(
-                            onClick: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MapPage(
-                                  initialPlace: _place,
-                                  setPlace: (place) {
-                                    setState(() {
-                                      _place = place;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.place_sharp),
-                                  const SizedBox(
-                                    width: 12.0,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      _place == null
-                                          ? "Select address"
-                                          : "${_place!.name}, ${_place!.formattedAddress ?? ""}",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const PlaceSelect(),
                     const SizedBox(
                       height: 16.0,
-                    ),
-                    Row(
-                      children: [
-                        Button(
-                          label: "Pick photo",
-                          onClick: () async {
-                            await _imageService.getImageFromGallery();
-                            setState(() {});
-                          },
-                        ),
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        Button(
-                          label: "Take photo",
-                          onClick: () async {
-                            await _imageService.getImageFromCamera();
-                            setState(() {});
-                          },
-                        ),
-                      ],
                     ),
                     const SizedBox(
                       height: 72.0,
@@ -332,8 +117,10 @@ class _AddEventState extends ConsumerState<AddEvent> {
                   left: 0,
                   right: 0,
                   child: Button(
-                    onClick: addEvent,
-                    label: _loading ? "Loading..." : "Add",
+                    onClick: () {
+                      ref.read(addEventProvider.notifier).addEvent();
+                    },
+                    label: event.loading ? "Loading..." : "Add",
                   ),
                 ),
               ],

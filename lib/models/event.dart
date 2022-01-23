@@ -14,13 +14,13 @@ class Event {
   });
 
   final String? id;
-  final String title;
-  final bool invitationNeeded;
-  final String? description;
-  final String organizerUID;
-  final DateTime startDate;
-  final TimeOfDay startTime;
-  final Place? place;
+  String title;
+  bool invitationNeeded;
+  String? description;
+  String organizerUID;
+  DateTime startDate;
+  TimeOfDay startTime;
+  Place? place;
 
   //TIME OF DAY WON'T BE AUTOMATICALLY CONVERTED TO JSON BY JSON_ANNOTATION
   factory Event.fromJson(Map<String, dynamic> json) {
