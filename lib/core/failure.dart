@@ -18,3 +18,5 @@ class FirestoreFailure implements Failure {
 }
 
 class MapFailure implements Failure {}
+
+class ImageUploadFailure implements Failure {}

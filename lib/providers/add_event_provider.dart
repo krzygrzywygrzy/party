@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:party/core/error.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/models/place.dart';
@@ -75,6 +75,21 @@ class AddEventProvider extends StateNotifier<AddEvent> {
       loading: true,
       event: state.event,
     );
+
+    try {
+      var res = await imageService.uploadImages();
+
+      res.fold(
+          (_) => throw ImageUploadError(), (r) => state.event.photoLinks = r);
+
+      //TODO: add event to firestore
+    } on ImageUploadError {
+      state = AddEvent(
+          loading: false, event: state.event, failure: ImageUploadFailure());
+    } catch (_) {
+      state = AddEvent(
+          loading: false, event: state.event, failure: UnknownFailure());
+    }
 
     state = AddEvent(
       loading: false,

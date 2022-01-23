@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:party/core/failure.dart';
 
 class ImageService {
   List<File> files = [];
@@ -21,7 +23,7 @@ class ImageService {
     }
   }
 
-  Future uploadImages() async {
+  Future<Either<Failure, List<String>>> uploadImages() async {
     throw UnimplementedError();
   }
 }

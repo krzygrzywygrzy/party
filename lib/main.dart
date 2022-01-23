@@ -9,7 +9,6 @@ import 'package:party/pages/auth/singup.dart';
 import 'package:party/pages/home/home.dart';
 import 'package:party/pages/map/map.dart';
 import 'package:party/pages/welcome/welcome.dart';
-
 import 'firebase_options.dart';
 
 Future<void> main() async {
