@@ -139,11 +139,25 @@ class _EventPageState extends ConsumerState<EventPage> {
                                           CrossAxisAlignment.start,
                                     ),
                                   });
-                        } else if (snapshot.hasError) {
-                          //TODO: display error
                         }
                         return layout;
                       },
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.date_range),
+                          const SizedBox(
+                            width: 16.0,
+                          ),
+                          Text(
+                              "${widget._event.startDate.day}.${widget._event.startDate.month}.${widget._event.startDate.year} ${widget._event.startTime.hour}:${widget._event.startTime.minute}"),
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: 16.0,
