@@ -6,6 +6,8 @@ import 'package:party/models/event.dart';
 class EventService {
   static final CollectionReference _events =
       FirebaseFirestore.instance.collection("events");
+  static final CollectionReference _users =
+      FirebaseFirestore.instance.collection("users");
 
   static Future<Either<Failure, Event>> addEvent(Event event) async {
     try {
@@ -39,6 +41,26 @@ class EventService {
     } on FirebaseException catch (e) {
       return Left(FirestoreFailure(e.message));
     } catch (e) {
+      return Left(UnknownFailure());
+    }
+  }
+
+  static Future<Either<Failure, dynamic>> joinEvent(
+      String userId,
+      String eventId,
+      List<String> usersEvents,
+      List<String> eventsUsers) async {
+    try {
+      await _events.doc(eventId).update({
+        "members": [...eventsUsers, userId]
+      });
+
+      await _users.doc().update({
+        "joinedEvents": [...usersEvents, eventId]
+      });
+
+      return const Right(true);
+    } catch (err) {
       return Left(UnknownFailure());
     }
   }

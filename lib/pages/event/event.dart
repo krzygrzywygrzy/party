@@ -44,6 +44,8 @@ class _EventPageState extends ConsumerState<EventPage> {
     super.initState();
   }
 
+  Future<void> joinEvent() async {}
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
