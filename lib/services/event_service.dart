@@ -8,6 +8,8 @@ class EventService {
       FirebaseFirestore.instance.collection("events");
   static final CollectionReference _users =
       FirebaseFirestore.instance.collection("users");
+  static final CollectionReference _chats =
+      FirebaseFirestore.instance.collection("chats");
 
   static Future<Either<Failure, Event>> addEvent(Event event) async {
     try {
