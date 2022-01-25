@@ -14,14 +14,6 @@ class EventService {
       var json = event.toJson();
       var res = await _events.add(json);
 
-      //add chat to db
-      // CollectionReference _chats =
-      //     FirebaseFirestore.instance.collection("chats/${res.id}");
-      // await _chats.add(Message(
-      //     content: "Welcome to ${event.title}",
-      //     displayName: displayName,
-      //     userId: userId));
-
       return Right(
         Event.fromJson({
           ...json,
@@ -49,6 +41,7 @@ class EventService {
     } on FirebaseException catch (e) {
       return Left(FirestoreFailure(e.message));
     } catch (e) {
+      print(e);
       return Left(UnknownFailure());
     }
   }

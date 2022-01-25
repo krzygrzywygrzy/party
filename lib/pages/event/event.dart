@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
-import 'package:party/models/user.dart' as party;
+import 'package:party/models/user.dart' as model;
 import 'package:party/pages/account/account.dart';
 import 'package:party/services/auth_service.dart';
 import 'package:party/widgets/input/button.dart';
@@ -42,6 +42,40 @@ class _EventPageState extends ConsumerState<EventPage> {
       }
     });
     super.initState();
+  }
+
+  Widget buildBottomButton() {
+    if (!_loggedIn) {
+      return Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: Button(
+          label: "To join event, sign up!",
+          onClick: () => Navigator.pushNamed(context, Account.path),
+        ),
+      );
+    } else if (widget._event.members!
+        .contains(FirebaseAuth.instance.currentUser!.uid)) {
+      return Positioned(
+          child: FloatingActionButton(
+        backgroundColor: Colors.amber,
+        child: const Icon(Icons.message_rounded),
+        onPressed: () {
+          //TOOD: go to chat page
+        },
+      ));
+    } else {
+      return Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: Button(
+          label: "Join event",
+          onClick: joinEvent,
+        ),
+      );
+    }
   }
 
   Future<void> joinEvent() async {}
@@ -116,7 +150,7 @@ class _EventPageState extends ConsumerState<EventPage> {
                       future: AuthService.getUser(widget._event.organizerUID),
                       builder: (
                         context,
-                        AsyncSnapshot<Either<Failure, party.User>> snapshot,
+                        AsyncSnapshot<Either<Failure, model.User>> snapshot,
                       ) {
                         Widget layout = const UserSkeleton();
                         if (snapshot.hasData) {
