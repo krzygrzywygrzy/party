@@ -8,13 +8,19 @@ class EventService {
       FirebaseFirestore.instance.collection("events");
   static final CollectionReference _users =
       FirebaseFirestore.instance.collection("users");
-  static final CollectionReference _chats =
-      FirebaseFirestore.instance.collection("chats");
 
   static Future<Either<Failure, Event>> addEvent(Event event) async {
     try {
       var json = event.toJson();
       var res = await _events.add(json);
+
+      //add chat to db
+      // CollectionReference _chats =
+      //     FirebaseFirestore.instance.collection("chats/${res.id}");
+      // await _chats.add(Message(
+      //     content: "Welcome to ${event.title}",
+      //     displayName: displayName,
+      //     userId: userId));
 
       return Right(
         Event.fromJson({

@@ -5,6 +5,7 @@ import 'package:party/pages/account/account.dart';
 import 'package:party/pages/add_event/add_event.dart';
 import 'package:party/pages/home/home_events.dart';
 import 'package:party/providers/home_provider.dart';
+import 'package:party/providers/user_provider.dart' as party;
 import 'package:party/widgets/input/avatar.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -37,6 +38,7 @@ class _HomeState extends ConsumerState<Home> {
 
     // WidgetsBinding.instance!.addPersistentFrameCallback((_) {
     ref.read(homeProvider.notifier).load();
+    ref.read(party.userProvider.notifier).load();
     // });
 
     super.initState();
