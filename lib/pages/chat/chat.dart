@@ -42,7 +42,9 @@ class _ChatState extends ConsumerState<Chat> {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Could not load messages!")));
             }
-            if (snapshot.hasData) {}
+            if (snapshot.hasData) {
+              //TODO:
+            }
             return layout;
           },
         ),

@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:party/models/place.dart';
 
@@ -43,7 +44,7 @@ class Event {
       startDate: DateTime.parse(json["startDate"]),
       place: Place.fromJson(json["place"]),
       photoLinks: json["photoLinks"],
-      members: json["members"],
+      members: json["members"].cast<String>(),
     );
   }
 

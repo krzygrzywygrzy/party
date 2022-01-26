@@ -47,9 +47,9 @@ class _EventPageState extends ConsumerState<EventPage> {
   Widget buildBottomButton() {
     if (!_loggedIn) {
       return Positioned(
-        bottom: 0,
-        left: 0,
-        right: 0,
+        bottom: 16,
+        left: 16,
+        right: 16,
         child: Button(
           label: "To join event, sign up!",
           onClick: () => Navigator.pushNamed(context, Account.path),
@@ -67,9 +67,9 @@ class _EventPageState extends ConsumerState<EventPage> {
       ));
     } else {
       return Positioned(
-        bottom: 0,
-        left: 0,
-        right: 0,
+        bottom: 16,
+        left: 16,
+        right: 16,
         child: Button(
           label: "Join event",
           onClick: joinEvent,
@@ -232,23 +232,7 @@ class _EventPageState extends ConsumerState<EventPage> {
               ),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _loggedIn
-                  ? Button(
-                      label: "Join event",
-                      onClick: () {},
-                    )
-                  : Button(
-                      label: "To join event, sign up!",
-                      onClick: () => Navigator.pushNamed(context, Account.path),
-                    ),
-            ),
-          ),
+          buildBottomButton(),
         ],
       ),
     );
