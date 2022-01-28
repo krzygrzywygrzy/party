@@ -13,6 +13,12 @@ class MessageCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container();
+    return Column(
+      children: [
+        Text(
+          _message.content,
+        ),
+      ],
+    );
   }
 }

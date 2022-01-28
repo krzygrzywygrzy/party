@@ -6,7 +6,9 @@ import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/models/user.dart' as model;
 import 'package:party/pages/account/account.dart';
+import 'package:party/providers/user_provider.dart' as provider;
 import 'package:party/services/auth_service.dart';
+import 'package:party/services/event_service.dart';
 import 'package:party/widgets/input/button.dart';
 import 'package:party/widgets/input/elevated_card.dart';
 import 'package:party/widgets/layout/user_card.dart';
@@ -71,14 +73,35 @@ class _EventPageState extends ConsumerState<EventPage> {
         left: 16,
         right: 16,
         child: Button(
-          label: "Join event",
+          label: _loading ? "Loading..." : "Join event",
           onClick: joinEvent,
         ),
       );
     }
   }
 
-  Future<void> joinEvent() async {}
+  bool _loading = false;
+  Future<void> joinEvent() async {
+    setState(() {
+      _loading = true;
+    });
+
+    //TODO: do null checks
+    var res = await EventService.joinEvent(
+      FirebaseAuth.instance.currentUser!.uid,
+      widget._event.id ?? "",
+      ref.read(provider.userProvider).user?.joinedEvents ?? [],
+      widget._event.members ?? [],
+    );
+
+    res.fold((l) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text()));
+    }, (p) {});
+
+    setState(() {
+      _loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

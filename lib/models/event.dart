@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:party/models/place.dart';
 
@@ -29,8 +28,6 @@ class Event {
 
   //TIME OF DAY WON'T BE AUTOMATICALLY CONVERTED TO JSON BY JSON_ANNOTATION
   factory Event.fromJson(Map<String, dynamic> json) {
-    print(json["members"]);
-
     return Event(
       title: json["title"],
       invitationNeeded: json["invitationNeeded"],
