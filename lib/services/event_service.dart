@@ -55,12 +55,13 @@ class EventService {
         "members": [...eventsUsers, userId]
       });
 
-      await _users.doc().update({
+      await _users.doc(userId).update({
         "joinedEvents": [...usersEvents, eventId]
       });
 
       return const Right(true);
     } catch (err) {
+      print(err);
       return Left(UnknownFailure());
     }
   }

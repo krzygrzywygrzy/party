@@ -15,13 +15,13 @@ import 'package:party/widgets/layout/user_card.dart';
 import 'package:party/widgets/layout/user_skeleteon.dart';
 
 class EventPage extends ConsumerStatefulWidget {
-  const EventPage({
+  EventPage({
     Key? key,
     required Event event,
   })  : _event = event,
         super(key: key);
 
-  final Event _event;
+  Event _event;
 
   @override
   ConsumerState createState() => _EventPageState();
@@ -60,13 +60,16 @@ class _EventPageState extends ConsumerState<EventPage> {
     } else if (widget._event.members!
         .contains(FirebaseAuth.instance.currentUser!.uid)) {
       return Positioned(
-          child: FloatingActionButton(
-        backgroundColor: Colors.amber,
-        child: const Icon(Icons.message_rounded),
-        onPressed: () {
-          //TOOD: go to chat page
-        },
-      ));
+        bottom: 16,
+        right: 16,
+        child: FloatingActionButton(
+          backgroundColor: Colors.amber,
+          child: const Icon(Icons.message_rounded),
+          onPressed: () {
+            //TOOD: go to chat page
+          },
+        ),
+      );
     } else {
       return Positioned(
         bottom: 16,
@@ -95,8 +98,14 @@ class _EventPageState extends ConsumerState<EventPage> {
     );
 
     res.fold((l) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text()));
-    }, (p) {});
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Could not join event. Try again later")));
+    }, (p) {
+      //ref.read(provider.userProvider.notifier)
+      setState(() {
+        widget._event.members!.add(FirebaseAuth.instance.currentUser!.uid);
+      });
+    });
 
     setState(() {
       _loading = false;
