@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:party/core/failure.dart';
+import 'package:party/models/message.dart';
+import 'package:party/services/chat_service.dart';
 
 class Chat extends ConsumerStatefulWidget {
   const Chat({
@@ -21,12 +24,14 @@ class Chat extends ConsumerStatefulWidget {
 
 class _ChatState extends ConsumerState<Chat> {
   late CollectionReference _chat;
+  late ChatService _chatService;
   final _messageController = TextEditingController();
 
   @override
   void initState() {
     _chat =
         FirebaseFirestore.instance.collection("events/${widget._chatId}/chat");
+    _chatService = ChatService(widget._chatId);
     super.initState();
   }
 
@@ -36,7 +41,23 @@ class _ChatState extends ConsumerState<Chat> {
     super.dispose();
   }
 
-  Future sendMessage() async {}
+  Future sendMessage(Message message) async {
+    var res = await _chatService.sendMessage(message);
+    res.fold((l) {
+      String message = "";
+      if (l is FirestoreFailure) {
+        message = l.message ?? "";
+      } else if (l is UnknownFailure) {
+        message = "Unknown error occurred";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
+    }, (r) => null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +95,10 @@ class _ChatState extends ConsumerState<Chat> {
                     Expanded(
                       child: TextField(
                         controller: _messageController,
+                        decoration: const InputDecoration(
+                          hintText: "type sth...",
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                     Padding(

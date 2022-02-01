@@ -4,8 +4,8 @@ import 'package:party/core/failure.dart';
 import 'package:party/models/message.dart';
 
 class ChatService {
-  ChatService(String chatId) {
-    chat = FirebaseFirestore.instance.collection("events/$chatId/chat");
+  ChatService(String eventId) {
+    chat = FirebaseFirestore.instance.collection("events/$eventId/chat");
   }
   late CollectionReference chat;
 
