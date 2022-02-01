@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/services/auth_service.dart';
+
 import '../models/user.dart' as model;
 
 class User {
@@ -40,6 +41,12 @@ class UserProvider extends StateNotifier<User> {
                 user: r,
               ));
     }
+  }
+
+  updateEventList(String eventId) {
+    var user = state.user!;
+    user.joinedEvents.add(eventId);
+    state = User(loading: false, user: user);
   }
 }
 

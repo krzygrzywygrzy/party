@@ -102,7 +102,7 @@ class _EventPageState extends ConsumerState<EventPage> {
     //TODO: do null checks
     var res = await EventService.joinEvent(
       FirebaseAuth.instance.currentUser!.uid,
-      widget._event.id ?? "",
+      widget._event.id!,
       ref.read(provider.userProvider).user?.joinedEvents ?? [],
       widget._event.members ?? [],
     );
@@ -111,7 +111,9 @@ class _EventPageState extends ConsumerState<EventPage> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Could not join event. Try again later")));
     }, (p) {
-      //ref.read(provider.userProvider.notifier)
+      ref
+          .read(provider.userProvider.notifier)
+          .updateEventList(widget._event.id!);
       setState(() {
         widget._event.members!.add(FirebaseAuth.instance.currentUser!.uid);
       });
