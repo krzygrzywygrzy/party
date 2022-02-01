@@ -6,6 +6,7 @@ import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/models/user.dart' as model;
 import 'package:party/pages/account/account.dart';
+import 'package:party/pages/chat/chat.dart';
 import 'package:party/providers/user_provider.dart' as provider;
 import 'package:party/services/auth_service.dart';
 import 'package:party/services/event_service.dart';
@@ -66,7 +67,16 @@ class _EventPageState extends ConsumerState<EventPage> {
           backgroundColor: Colors.amber,
           child: const Icon(Icons.message_rounded),
           onPressed: () {
-            //TOOD: go to chat page
+            print(widget._event.id);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Chat(
+                  chatId: widget._event.id ?? "",
+                  title: widget._event.title,
+                ),
+              ),
+            );
           },
         ),
       );

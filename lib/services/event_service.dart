@@ -13,6 +13,7 @@ class EventService {
     try {
       var json = event.toJson();
       var res = await _events.add(json);
+      _events.doc(res.id).collection("chat");
 
       return Right(
         Event.fromJson({
