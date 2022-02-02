@@ -69,48 +69,56 @@ class _ChatState extends ConsumerState<Chat> {
       body: SafeArea(
         child: Column(
           children: [
-            StreamBuilder(
-              stream: _chat.snapshots(),
-              builder: (context, AsyncSnapshot snapshot) {
-                Widget layout = Container();
-                if (snapshot.hasError) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Could not load messages!")));
-                }
-                if (snapshot.hasData) {
-                  //TODO:
-                  print(snapshot.data.toString());
-                }
-                return layout;
-              },
+            Flexible(
+              child: StreamBuilder(
+                stream: _chat.snapshots(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  Widget layout = Container();
+                  if (snapshot.hasError) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Could not load messages!")));
+                  }
+                  if (snapshot.hasData) {
+                    //TODO:
+                  }
+                  return layout;
+                },
+              ),
             ),
             Material(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 4.0,
+              elevation: 4,
+              child: Container(
+                decoration: const BoxDecoration(
+                  border: Border(top: BorderSide(color: Colors.black12)),
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: const InputDecoration(
-                          hintText: "type sth...",
-                          border: InputBorder.none,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 4.0,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _messageController,
+                          cursorColor: Colors.amber,
+                          decoration: const InputDecoration(
+                            hintText: "type sth...",
+                            border: InputBorder.none,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: GestureDetector(
-                        child: const Icon(
-                          Icons.send,
-                          color: Colors.amber,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: GestureDetector(
+                          child: const Icon(
+                            Icons.send,
+                            color: Colors.amber,
+                          ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

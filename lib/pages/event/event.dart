@@ -99,7 +99,6 @@ class _EventPageState extends ConsumerState<EventPage> {
       _loading = true;
     });
 
-    //TODO: do null checks
     var res = await EventService.joinEvent(
       FirebaseAuth.instance.currentUser!.uid,
       widget._event.id!,
