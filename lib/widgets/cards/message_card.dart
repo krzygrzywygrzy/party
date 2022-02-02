@@ -23,13 +23,16 @@ class MessageCard extends ConsumerWidget {
           elevation: 2.0,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          color: isYours ? Colors.amber : Colors.black12,
+          color: isYours ? Colors.amber : Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(
+              vertical: 8.0,
+              horizontal: 12.0,
+            ),
             child: Text(
               _message.content,
               style: TextStyle(
-                color: isYours ? Colors.white : Colors.black12,
+                color: isYours ? Colors.white : Colors.black,
                 fontSize: 16.0,
               ),
             ),
