@@ -62,7 +62,6 @@ class EventService {
 
       return const Right(true);
     } catch (err) {
-      print(err);
       return Left(UnknownFailure());
     }
   }

@@ -67,7 +67,6 @@ class _EventPageState extends ConsumerState<EventPage> {
           backgroundColor: Colors.amber,
           child: const Icon(Icons.message_rounded),
           onPressed: () {
-            print(widget._event.id);
             Navigator.push(
               context,
               MaterialPageRoute(

@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/message.dart';
+import 'package:party/providers/user_provider.dart';
 import 'package:party/services/chat_service.dart';
+import 'package:party/widgets/cards/message_card.dart';
+import 'package:party/widgets/input/message_input.dart';
 
 class Chat extends ConsumerStatefulWidget {
   const Chat({
@@ -56,7 +60,7 @@ class _ChatState extends ConsumerState<Chat> {
           content: Text(message),
         ),
       );
-    }, (r) => null);
+    }, (r) => _messageController.clear());
   }
 
   @override
@@ -72,60 +76,63 @@ class _ChatState extends ConsumerState<Chat> {
             Flexible(
               child: StreamBuilder(
                 stream: _chat.snapshots(),
-                builder: (context, AsyncSnapshot snapshot) {
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   Widget layout = Container();
                   if (snapshot.hasError) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text("Could not load messages!")));
                   }
                   if (snapshot.hasData) {
-                    //TODO:
+                    var docs = snapshot.data?.docs;
+                    if (docs == null || docs.isEmpty) {
+                      layout = const Center(
+                        child: Text("There are no messages sent yet!"),
+                      );
+                    } else {
+                      List<Message> messages = [];
+                      for (var doc in docs) {
+                        messages.add(Message.fromJson(
+                            doc.data() as Map<String, dynamic>));
+                      }
+
+                      layout = Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: ListView.builder(
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            bool isYours = messages[index].userId ==
+                                FirebaseAuth.instance.currentUser?.uid;
+                            return Padding(
+                              padding: index == 0
+                                  ? const EdgeInsets.only(bottom: 8.0, top: 8.0)
+                                  : const EdgeInsets.only(bottom: 8.0),
+                              child: MessageCard(message: messages[index]),
+                            );
+                          },
+                        ),
+                      );
+                    }
                   }
                   return layout;
                 },
               ),
             ),
-            Material(
-              elevation: 4,
-              child: Container(
-                decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: Colors.black12)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 4.0,
+            MessageInput(
+              messageController: _messageController,
+              onClick: () {
+                final user = ref.read(userProvider);
+                sendMessage(
+                  Message(
+                    content: _messageController.text,
+                    displayName: "${user.user!.name} ${user.user!.surname}",
+                    userId: FirebaseAuth.instance.currentUser!.uid,
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _messageController,
-                          cursorColor: Colors.amber,
-                          decoration: const InputDecoration(
-                            hintText: "type sth...",
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: GestureDetector(
-                          child: const Icon(
-                            Icons.send,
-                            color: Colors.amber,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                );
+              },
             ),
           ],
         ),
       ),
     );
-    return Container();
   }
 }
