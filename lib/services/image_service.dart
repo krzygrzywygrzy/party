@@ -44,4 +44,20 @@ class ImageService {
       return Left(UnknownFailure());
     }
   }
+
+  static Future<Either<Failure, List<String>>> getImagesUrls(
+      List<String> paths) async {
+    try {
+      List<String> urls = [];
+      for (var path in paths) {
+        var url = await firebase_storage.FirebaseStorage.instance
+            .ref(path)
+            .getDownloadURL();
+        urls.add(url);
+      }
+      return Right(urls);
+    } catch (err) {
+      return Left(UnknownFailure());
+    }
+  }
 }

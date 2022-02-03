@@ -154,7 +154,7 @@ class _EventPageState extends ConsumerState<EventPage> {
                             bottomRight: Radius.circular(20.0),
                           ),
                           child: Image.network(
-                            "https://cms.finnair.com/resource/blob/512102/9c27b858c9241ccc69ab7a418eb92d65/new-york-shopping-data.jpg?impolicy=crop&width=1697&height=955&x=0&y=88&imwidth=768",
+                            "https://www.skokipolska.pl/wp-content/uploads/2020/09/placeholder.png",
                             fit: BoxFit.cover,
                             height: width,
                           ),

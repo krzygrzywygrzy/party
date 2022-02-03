@@ -1,6 +1,9 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/pages/event/event.dart';
+import 'package:party/services/image_service.dart';
 
 class EventCard extends StatelessWidget {
   const EventCard({
@@ -74,10 +77,28 @@ class EventCard extends StatelessWidget {
                   width: width * 0.3,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
-                    child: Image.network(
-                      "https://cms.finnair.com/resource/blob/512102/9c27b858c9241ccc69ab7a418eb92d65/new-york-shopping-data.jpg?impolicy=crop&width=1697&height=955&x=0&y=88&imwidth=768",
-                      fit: BoxFit.cover,
-                    ),
+                    child: FutureBuilder(
+                        future:
+                            ImageService.getImagesUrls(_event.photoLinks ?? []),
+                        builder: (context,
+                            AsyncSnapshot<Either<Failure, List<String>>>
+                                snapshot) {
+                          var placeholder = Image.network(
+                            "https://www.skokipolska.pl/wp-content/uploads/2020/09/placeholder.png",
+                            fit: BoxFit.cover,
+                          );
+                          if (!snapshot.hasData) {
+                            return placeholder;
+                          } else {
+                            String? url;
+                            snapshot.data!.fold((l) => url = null, (r) {
+                              r.isNotEmpty ? url = r.first : url = null;
+                            });
+                            return url == null
+                                ? placeholder
+                                : Image.network('$url', fit: BoxFit.cover);
+                          }
+                        }),
                   ),
                 ),
               ),
