@@ -40,7 +40,7 @@ class Event {
       ),
       startDate: DateTime.parse(json["startDate"]),
       place: Place.fromJson(json["place"]),
-      photoLinks: json["photoLinks"],
+      photoLinks: json["photoLinks"].cast<String>(),
       members: json["members"].cast<String>(),
     );
   }
@@ -55,8 +55,8 @@ class Event {
       "minute": startTime.minute,
       "hour": startTime.hour,
       "place": place != null ? place!.toJson() : null,
-      "photoLinks": photoLinks,
-      "members": members,
+      "photoLinks": photoLinks ?? [],
+      "members": members ?? [],
     };
   }
 }

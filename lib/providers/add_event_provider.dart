@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:party/core/error.dart';
 import 'package:party/core/failure.dart';
 import 'package:party/models/event.dart';
 import 'package:party/models/place.dart';
+import 'package:party/services/event_service.dart';
 import 'package:party/services/image_service.dart';
 
 class AddEvent {
@@ -27,7 +29,7 @@ class AddEventProvider extends StateNotifier<AddEvent> {
               title: "",
               startDate: DateTime.now(),
               startTime: TimeOfDay.now(),
-              organizerUID: "",
+              organizerUID: FirebaseAuth.instance.currentUser!.uid,
             ),
           ),
         );
@@ -77,12 +79,31 @@ class AddEventProvider extends StateNotifier<AddEvent> {
     );
 
     try {
-      var res = await imageService.uploadImages();
+      var imageUpload = await imageService.uploadImages();
 
-      res.fold(
+      imageUpload.fold(
           (_) => throw ImageUploadError(), (r) => state.event.photoLinks = r);
 
-      //TODO: add event to firestore
+      var addEvent = await EventService.addEvent(state.event);
+      addEvent.fold(
+        (l) => state = AddEvent(
+          loading: false,
+          event: state.event,
+          failure: l,
+        ),
+        (r) {
+          state = AddEvent(
+            loading: false,
+            event: Event(
+              invitationNeeded: false,
+              title: "",
+              startDate: DateTime.now(),
+              startTime: TimeOfDay.now(),
+              organizerUID: FirebaseAuth.instance.currentUser!.uid,
+            ),
+          );
+        },
+      );
     } on ImageUploadError {
       state = AddEvent(
           loading: false, event: state.event, failure: ImageUploadFailure());
@@ -90,11 +111,6 @@ class AddEventProvider extends StateNotifier<AddEvent> {
       state = AddEvent(
           loading: false, event: state.event, failure: UnknownFailure());
     }
-
-    state = AddEvent(
-      loading: false,
-      event: state.event,
-    );
   }
 }
 
