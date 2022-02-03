@@ -13,7 +13,10 @@ class EventService {
     try {
       var json = event.toJson();
       var res = await _events.add(json);
-      _events.doc(res.id).collection("chat");
+
+      //add collection and empty it
+      await _events.doc(res.id).collection("chat").add({});
+      _events.doc(res.id).collection("chat").doc().delete();
 
       return Right(
         Event.fromJson({
