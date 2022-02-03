@@ -66,18 +66,18 @@ class EventCard extends StatelessWidget {
               ),
             ),
             Positioned(
-                child: Material(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              elevation: 2,
-              child: Hero(
-                tag: "event_" + _event.title,
-                child: SizedBox(
-                  height: 140.0,
-                  width: width * 0.3,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: FutureBuilder(
+              child: Material(
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                elevation: 2,
+                child: Hero(
+                  tag: "event_" + _event.title,
+                  child: SizedBox(
+                    height: 140.0,
+                    width: width * 0.3,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: FutureBuilder(
                         future:
                             ImageService.getImagesUrls(_event.photoLinks ?? []),
                         builder: (context,
@@ -98,11 +98,13 @@ class EventCard extends StatelessWidget {
                                 ? placeholder
                                 : Image.network('$url', fit: BoxFit.cover);
                           }
-                        }),
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
-            )),
+            ),
           ],
         ),
       ),

@@ -10,6 +10,7 @@ import 'package:party/pages/chat/chat.dart';
 import 'package:party/providers/user_provider.dart' as provider;
 import 'package:party/services/auth_service.dart';
 import 'package:party/services/event_service.dart';
+import 'package:party/services/image_service.dart';
 import 'package:party/widgets/input/button.dart';
 import 'package:party/widgets/input/elevated_card.dart';
 import 'package:party/widgets/layout/user_card.dart';
@@ -153,10 +154,33 @@ class _EventPageState extends ConsumerState<EventPage> {
                             bottomLeft: Radius.circular(20.0),
                             bottomRight: Radius.circular(20.0),
                           ),
-                          child: Image.network(
-                            "https://www.skokipolska.pl/wp-content/uploads/2020/09/placeholder.png",
-                            fit: BoxFit.cover,
-                            height: width,
+                          child: FutureBuilder(
+                            future: ImageService.getImagesUrls(
+                                widget._event.photoLinks ?? []),
+                            builder: (context,
+                                AsyncSnapshot<Either<Failure, List<String>>>
+                                    snapshot) {
+                              var placeholder = Image.network(
+                                "https://www.skokipolska.pl/wp-content/uploads/2020/09/placeholder.png",
+                                fit: BoxFit.cover,
+                              );
+                              if (!snapshot.hasData) {
+                                return placeholder;
+                              } else {
+                                String? url;
+                                snapshot.data!.fold((l) => url = null, (r) {
+                                  r.isNotEmpty ? url = r.first : url = null;
+                                });
+                                return url == null
+                                    ? placeholder
+                                    : Image.network(
+                                        '$url',
+                                        fit: BoxFit.cover,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                      );
+                              }
+                            },
                           ),
                         ),
                         Positioned(
